@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fixtrack — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.32.0/dist/tabler-icons.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#16233B;--blue:#1E80F0;--blue-hover:#1670D8;--bg:#EEF2F5;--surface:#FFFFFF;--muted:#6B7280;--border:#E5E7EB;--error:#E24B4A;--success:#1D9E75;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--w:240px}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--navy);-webkit-font-smoothing:antialiased;display:flex}
+.sidebar{width:var(--w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;inset:0;z-index:50;transition:transform 0.3s}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:18px 16px;border-bottom:1px solid var(--border)}
+.sidebar-brand img{width:26px;height:26px}
+.sidebar-brand span{font-size:15px;font-weight:600;letter-spacing:-0.2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 6px}
+.nav-group{margin-bottom:4px}
+.nav-group-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:10px 10px 4px;opacity:0.55}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:12.5px;font-weight:450;color:#4B5563;cursor:pointer;transition:all 0.12s;text-decoration:none}
+.nav-item:hover{background:rgba(30,128,240,0.05);color:var(--navy)}
+.nav-item.active{background:rgba(30,128,240,0.09);color:var(--blue);font-weight:500}
+.nav-item .ti{font-size:17px}
+/* Sidebar footer */
+.sidebar-footer{border-top:1px solid var(--border);padding:8px 10px;position:relative}
+.profile-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:6px 6px;border-radius:6px;cursor:pointer;transition:background 0.12s;border:none;background:none;font-family:var(--font);text-align:left}
+.profile-trigger:hover{background:rgba(0,0,0,0.03)}
+.profile-avatar{width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.profile-info{flex:1;min-width:0;overflow:hidden;display:flex;flex-direction:column;gap:4px}
+.profile-name{font-size:12.5px;font-weight:500;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.profile-email{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.profile-chevron{font-size:14px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.profile-chevron.open{transform:rotate(180deg)}
+.profile-dropdown{display:none;position:absolute;bottom:calc(100% + 6px);left:10px;right:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.1);padding:6px;z-index:70}
+.profile-dropdown.open{display:block}
+.pd-card{display:flex;align-items:center;gap:10px;padding:8px 6px;overflow:hidden}
+.pd-avatar{width:32px;height:32px;border-radius:8px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.pd-info{flex:1;min-width:0;overflow:hidden;display:flex;flex-direction:column;gap:2px}
+.pd-name{font-size:13px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.pd-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.pd-divider{height:1px;background:var(--border);margin:4px 0}
+.pd-item{display:flex;align-items:center;gap:8px;width:100%;padding:7px 8px;border-radius:6px;font-size:12px;font-weight:450;color:#4B5563;background:none;border:none;cursor:pointer;text-align:left;text-decoration:none;transition:background 0.1s}
+.pd-item:hover{background:rgba(0,0,0,0.04)}
+.pd-item .ti{font-size:15px}
+.pd-item.logout{color:var(--error)}
+.pd-item.logout .ti{color:var(--error)}
+/* Main */
+.main{flex:1;margin-left:var(--w);padding:24px 28px;min-height:100vh}
+.module-view{display:none}
+.module-view.active{display:block}
+.mb{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:12px}
+.pt{font-size:22px;font-weight:700;letter-spacing:-0.3px;color:#111827}
+.pd{font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:20px}
+/* KPI */
+.kg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.kc{border-radius:12px;border:1px solid;padding:14px;transition:transform 0.15s,box-shadow 0.15s}
+.kc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.kv{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-top:5px;line-height:1}
+.kh{font-size:11.5px;margin-top:6px;line-height:1.3;opacity:0.8}
+.kviolet .kl,.kviolet .kv,.kviolet .kh{color:#6D28D9}
+.kviolet{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-color:#C4B5FD}
+.kcyan .kl,.kcyan .kv,.kcyan .kh{color:#0891B2}
+.kcyan{background:linear-gradient(135deg,#ECFEFF,#CFFAFE);border-color:#67E8F9}
+.kamber .kl,.kamber .kv,.kamber .kh{color:#D97706}
+.kamber{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-color:#FCD34D}
+.kblue .kl,.kblue .kv,.kblue .kh{color:#2563EB}
+.kblue{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-color:#93C5FD}
+.kfuchsia .kl,.kfuchsia .kv,.kfuchsia .kh{color:#A21CAF}
+.kfuchsia{background:linear-gradient(135deg,#FDF4FF,#FAE8FF);border-color:#F0ABFC}
+.kemerald .kl,.kemerald .kv,.kemerald .kh{color:#059669}
+.kemerald{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-color:#6EE7B7}
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.ch{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ch h2{font-size:13.5px;font-weight:600}
+.cb{padding:16px}
+.cr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:0 0 12px}
+.cl,.crr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ci{height:34px;border:1px solid var(--border);border-radius:6px;padding:0 10px;font-family:var(--font);font-size:12px;outline:none;color:#111827;background:var(--surface);width:180px}
+.ci:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(30,128,240,0.12)}
+.cs{height:34px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-family:var(--font);font-size:12px;outline:none;color:#4B5563;background:var(--surface);cursor:pointer}
+.ct{height:34px;border:1px solid var(--border);border-radius:6px;padding:0 12px;font-family:var(--font);font-size:11.5px;font-weight:500;cursor:pointer;color:#4B5563;background:var(--surface);transition:all 0.12s;display:flex;align-items:center;gap:5px}
+.ct:hover{background:#F3F4F6}
+.ct.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ct.pri:hover{background:var(--blue-hover)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+th{background:#F3F4F6;padding:8px 10px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);text-align:left;border-bottom:1px solid var(--border)}
+td{padding:8px 10px;border-bottom:1px solid #F3F4F6;color:#4B5563}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even){background:#F9FAFB}
+.st{display:inline-flex;font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px}
+.st.act,.st.ver{background:#D1FAE5;color:#059669}
+.st.ina{background:#FEE2E2;color:#DC2626}
+.st.pen{background:#FEF3C7;color:#D97706}
+.aw{position:relative;display:inline-block}
+.ab{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;color:#4B5563;background:var(--surface);transition:all 0.1s}
+.ab:hover{background:#F3F4F6}
+.ad{display:none;position:absolute;right:0;top:100%;z-index:50;margin-top:4px;width:150px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.08);padding:4px}
+.ad.open{display:block}
+.ad button{display:flex;align-items:center;gap:7px;width:100%;padding:6px 8px;border-radius:5px;font-size:11.5px;font-weight:450;color:#4B5563;background:none;border:none;cursor:pointer;text-align:left;transition:background 0.1s}
+.ad button:hover{background:rgba(0,0,0,0.04)}
+.ad .ti{font-size:14px}
+.ad .red{color:var(--error)}
+dialog{border:none;border-radius:12px;padding:0;max-width:480px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.15);font-family:var(--font)}
+dialog::backdrop{background:rgba(0,0,0,0.3)}
+.mc{padding:20px}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mh h2{font-size:15px;font-weight:600}
+.mx{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;display:flex}
+.mx:hover{color:var(--navy)}
+.mb2{display:flex;flex-direction:column;gap:10px}
+.mb2 label{font-size:11.5px;font-weight:500;color:#4B5563}
+.mb2 input{height:36px;border:1px solid var(--border);border-radius:6px;padding:0 10px;font-family:var(--font);font-size:12.5px;outline:none;color:#111827;width:100%}
+.mb2 input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(30,128,240,0.12)}
+.mf{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.mf button{padding:7px 14px;border-radius:6px;font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer}
+.mc2{background:var(--surface);border:1px solid var(--border);color:#4B5563}
+.mc2:hover{background:#F3F4F6}
+.ms{background:var(--blue);border:none;color:#fff}
+.ms:hover{background:var(--blue-hover)}
+.ms.dg{background:var(--error)}
+.ms.dg:hover{background:#C62828}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:14px}
+  .kg{grid-template-columns:1fr}
+  .st{display:flex!important}
+}
+.st{display:none;background:none;border:none;cursor:pointer;color:var(--muted);padding:6px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand"><img src="Fixtrack-removebg-preview.png" alt=""><span>Fixtrack</span></div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <button class="profile-trigger" id="profileToggle">
+      <span class="profile-avatar" id="avatar">U</span>
+      <span class="profile-info"><span class="profile-name" id="userName">User</span><span class="profile-email" id="userEmail">user@fixtrack.com</span></span>
+      <i class="ti ti-chevron-up profile-chevron" id="profileChevron"></i>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="pd-card">
+        <span class="pd-avatar" id="dropAvatar">U</span>
+        <span class="pd-info"><span class="pd-name" id="dropName">User</span><span class="pd-email" id="dropEmail">user@fixtrack.com</span></span>
+      </div>
+      <div class="pd-divider"></div>
+      <a class="pd-item" href="#"><i class="ti ti-settings"></i> Settings</a>
+      <div class="pd-divider"></div>
+      <button class="pd-item logout" id="logoutBtn"><i class="ti ti-logout"></i> Log Out</button>
+    </div>
+  </div>
+</aside>
+
+<main class="main" id="mainContent">
+  <button class="st" id="sidebarToggle"><i class="ti ti-menu-2"></i></button>
+
+  <div class="module-view active" id="module-overview">
+    <div class="mb">Super Admin Module</div>
+    <div class="pt">Dashboard</div>
+    <div class="pd">Platform-wide snapshot and critical queues.</div>
+    <div class="kg" id="kpiGrid"></div>
+    <div class="card"><div class="ch"><h2>Latest Records</h2></div><div class="tbl"><table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Registered</th></tr></thead><tbody id="usersTable"></tbody></table></div></div>
+  </div>
+
+  <div class="module-view" id="module-users">
+    <div class="mb">Super Admin Module • Administration</div>
+    <div class="pt">User & Access</div>
+    <div class="pd">Manage accounts, roles, and permission governance.</div>
+    <div class="card">
+      <div class="ch"><h2>User Accounts</h2><button class="ct pri" onclick="document.getElementById('createModal').showModal()"><i class="ti ti-plus" style="font-size:14px"></i> Add User</button></div>
+      <div class="cb">
+        <div class="cr"><div class="cl"><input class="ci" id="userSearch" placeholder="Search users..." oninput="filterUsers()"><select class="cs" id="userStatusFilter" onchange="filterUsers()"><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select><button class="ct" onclick="resetFilter()">Reset</button></div><div class="crr"><button class="ct pri" onclick="exportCSV()">Export CSV</button></div></div>
+        <div class="tbl"><table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Registered</th><th style="width:80px">Action</th></tr></thead><tbody id="allUsersTable"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module-view" id="module-technician-approvals"><div class="mb">Super Admin Module • Administration</div><div class="pt">Technician Approvals</div><div class="pd">Review and verify technician applications.</div><div class="kg" style="grid-template-columns:repeat(2,1fr)"><div class="kc kamber"><div class="kl">Pending</div><div class="kv">0</div><div class="kh">Awaiting review</div></div><div class="kc kemerald"><div class="kl">Verified</div><div class="kv">0</div></div></div></div>
+  <div class="module-view" id="module-technicians"><div class="mb">Super Admin Module • Administration</div><div class="pt">Technicians</div><div class="pd">View technician profiles.</div><div class="card" style="padding:24px;text-align:center;color:var(--muted)"><i class="ti ti-tool" style="font-size:32px;display:block;margin-bottom:8px"></i>No technician data yet.</div></div>
+
+  <div class="module-view" id="module-service-requests"><div class="mb">Super Admin Module • Operations</div><div class="pt">Service Requests</div><div class="pd">Monitor service bookings.</div><div class="kg"><div class="kc kamber"><div class="kl">Pending</div><div class="kv">0</div></div><div class="kc kcyan"><div class="kl">In Progress</div><div class="kv">0</div></div><div class="kc kemerald"><div class="kl">Completed</div><div class="kv">0</div></div></div></div>
+  <div class="module-view" id="module-reports"><div class="mb">Super Admin Module • Operations</div><div class="pt">Reports & Disputes</div><div class="pd">Handle complaints and disputes.</div><div class="kg" style="grid-template-columns:repeat(2,1fr)"><div class="kc kamber"><div class="kl">Open</div><div class="kv">0</div></div><div class="kc kemerald"><div class="kl">Resolved</div><div class="kv">0</div></div></div></div>
+</main>
+
+<dialog id="createModal"><div class="mc"><div class="mh"><h2>Create User</h2><button class="mx" onclick="document.getElementById('createModal').close()"><i class="ti ti-x"></i></button></div><div class="mb2"><label>Full name <input id="createName" placeholder="John Doe"></label><label>Email <input id="createEmail" type="email" placeholder="john@example.com"></label><label>Password <input id="createPass" type="password" placeholder="Min. 8 chars"></label></div><div class="mf"><button class="mc2" onclick="document.getElementById('createModal').close()">Cancel</button><button class="ms" onclick="createUser()">Create Account</button></div></div></dialog>
+<dialog id="deleteModal"><div class="mc"><div class="mh"><h2>Delete User</h2><button class="mx" onclick="document.getElementById('deleteModal').close()"><i class="ti ti-x"></i></button></div><div class="mb2"><p style="font-size:13px;color:#4B5563">Are you sure you want to delete <strong id="deleteUserName"></strong>?</p></div><div class="mf"><button class="mc2" onclick="document.getElementById('deleteModal').close()">Cancel</button><button class="ms dg" onclick="confirmDelete()">Delete</button></div></div></dialog>
+
+<script>
+(function(){'use strict';
+const $=id=>document.getElementById(id);
+const API='http://localhost/fixtrack/api/';
+const nav=$('sidebarNav'),kpiGrid=$('kpiGrid');
+const usersTable=$('usersTable'),allUsersTable=$('allUsersTable');
+const userName=$('userName'),userEmail=$('userEmail'),avatar=$('avatar');
+const dropName=$('dropName'),dropEmail=$('dropEmail'),dropAvatar=$('dropAvatar');
+
+let users=[];
+
+const modules=[
+  {key:'overview',label:'Dashboard',icon:'home',group:'Platform'},
+  {key:'technician-approvals',label:'Technician Approvals',icon:'badge',group:'Administration'},
+  {key:'users',label:'User & Access',icon:'users',group:'Administration'},
+  {key:'technicians',label:'Technicians',icon:'tool',group:'Administration'},
+  {key:'technician-documents',label:'Technician Documents',icon:'file-text',group:'Administration'},
+  {key:'service-requests',label:'Service Requests',icon:'clipboard-list',group:'Operations'},
+  {key:'dispatch-assignments',label:'Dispatch Assignments',icon:'list',group:'Operations'},
+  {key:'work-orders',label:'Work Orders',icon:'clipboard-check',group:'Operations'},
+  {key:'request-devices',label:'Request Devices',icon:'device-laptop',group:'Operations'},
+  {key:'service-areas',label:'Service Areas',icon:'map',group:'Operations'},
+  {key:'repair-tracking',label:'Repair Tracking',icon:'refresh',group:'Operations'},
+  {key:'tracking-sessions',label:'Tracking Sessions',icon:'map-pin',group:'Operations'},
+  {key:'reports',label:'Reports & Disputes',icon:'alert-triangle',group:'Operations'},
+  {key:'system-monitoring',label:'System Monitoring',icon:'server',group:'Operations'},
+  {key:'audit-logs',label:'Audit Logs',icon:'clipboard-data',group:'Security'},
+];
+
+const groups={};modules.forEach(m=>{if(!groups[m.group])groups[m.group]=[];groups[m.group].push(m)});
+Object.entries(groups).forEach(([g,items])=>{
+  const gr=document.createElement('div');gr.className='nav-group';
+  const t=document.createElement('div');t.className='nav-group-title';t.textContent=g;
+  gr.appendChild(t);
+  items.forEach(m=>{
+    const a=document.createElement('a');a.className='nav-item';a.dataset.module=m.key;
+    a.innerHTML='<i class="ti ti-'+m.icon+'"></i>'+m.label;
+    a.addEventListener('click',e=>{e.preventDefault();switchModule(m.key)});
+    gr.appendChild(a);
+  });
+  nav.appendChild(gr);
+});
+
+function switchModule(key){
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.module===key));
+  document.querySelectorAll('.module-view').forEach(el=>el.classList.toggle('active',el.id==='module-'+key));
+  $('sidebar').classList.remove('open');
+}
+
+function renderKpis(stats){
+  const d=[
+    {l:'Total Users',v:stats.total_users||'—',h:'Registered accounts',c:'kviolet'},
+    {l:'Active Sessions',v:'—',h:'Currently online',c:'kcyan'},
+    {l:'Pending Approvals',v:'—',h:'Awaiting review',c:'kamber'},
+    {l:'Service Requests',v:'—',h:'Total bookings',c:'kblue'},
+    {l:'Open Reports',v:'—',h:'Unresolved disputes',c:'kfuchsia'},
+    {l:'Work Orders',v:'—',h:'Active this week',c:'kemerald'},
+  ];
+  kpiGrid.innerHTML='';
+  d.forEach(k=>{
+    const el=document.createElement('div');el.className='kc '+k.c;
+    el.innerHTML='<div class="kl">'+k.l+'</div><div class="kv">'+k.v+'</div><div class="kh">'+k.h+'</div>';
+    kpiGrid.appendChild(el);
+  });
+}
+
+function renderUsers(list){
+  users=list||[];
+  const fn=(u)=>u.username||u.email.split('@')[0];
+  usersTable.innerHTML='';
+  users.forEach(u=>{
+    const s=u.failed_attempts>4?'ina':'act';
+    usersTable.innerHTML+='<tr><td>'+fn(u)+'</td><td>'+u.email+'</td><td><span class="st '+s+'">'+(s==='ina'?'Inactive':'Active')+'</span></td><td>'+(u.created_at||'—')+'</td></tr>';
+  });
+  renderAllUsers();
+}
+
+function renderAllUsers(){
+  const search=($('userSearch').value||'').toLowerCase();
+  const st=$('userStatusFilter').value;
+  let filtered=users.filter(u=>{
+    const n=(u.username||u.email).toLowerCase();
+    if(search&&!n.includes(search)&&!u.email.toLowerCase().includes(search))return false;
+    if(st==='active'&&u.failed_attempts>4)return false;
+    if(st==='inactive'&&u.failed_attempts<=4)return false;
+    return true;
+  });
+  allUsersTable.innerHTML='';
+  filtered.forEach(u=>{
+    const s=u.failed_attempts>4?'ina':'act';
+    allUsersTable.innerHTML+='<tr><td>'+fn(u)+'</td><td>'+u.email+'</td><td><span class="st '+s+'">'+(s==='ina'?'Inactive':'Active')+'</span></td><td>'+(u.created_at||'—')+'</td>'
+    +'<td><div class="aw"><button class="ab" onclick="toggleAction(this)"><i class="ti ti-dots-vertical" style="font-size:14px"></i></button>'
+    +'<div class="ad"><button onclick="openDelete('+u.id+',\''+(u.username||u.email)+'\')"><i class="ti ti-trash"></i> Delete</button></div></div></td></tr>';
+  });
+}
+window.filterUsers=renderAllUsers;
+window.resetFilter=function(){$('userSearch').value='';$('userStatusFilter').value='';renderAllUsers()};
+window.toggleAction=function(btn){
+  const dd=btn.parentElement.querySelector('.ad');
+  dd.classList.toggle('open');
+  document.addEventListener('click',function cl(e){if(!btn.parentElement.contains(e.target)){document.querySelectorAll('.ad.open').forEach(d=>d.classList.remove('open'));document.removeEventListener('click',cl)}});
+};
+window.openDelete=function(id,name){window.delId=id;$('deleteUserName').textContent=name;$('deleteModal').showModal()};
+window.confirmDelete=function(){
+  if(!window.delId)return;
+  fetch(API+'delete-user.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:window.delId})})
+  .then(r=>r.json()).then(d=>{if(d.success)location.reload()});
+  $('deleteModal').close();
+};
+window.createUser=function(){
+  const n=$('createName').value.trim(),e=$('createEmail').value.trim(),p=$('createPass').value;
+  if(!n||!e||!p)return;
+  fetch(API+'register.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,password:p})})
+  .then(r=>r.json()).then(d=>{if(d.success){$('createModal').close();location.reload()}else alert(d.message)});
+};
+window.exportCSV=function(){
+  let c='Name,Email,Status,Registered\n';
+  users.forEach(u=>{c+=(u.username||'')+','+u.email+','+(u.failed_attempts>4?'Inactive':'Active')+','+(u.created_at||'')+'\n'});
+  const b=new Blob([c],{type:'text/csv'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='fixtrack-users.csv';a.click();
+};
+
+// Profile dropdown
+$('profileToggle').addEventListener('click',function(e){
+  e.stopPropagation();
+  $('profileDropdown').classList.toggle('open');
+  $('profileChevron').classList.toggle('open');
+});
+document.addEventListener('click',function(e){
+  const dd=$('profileDropdown'),ch=$('profileChevron');
+  if(!$('profileToggle').contains(e.target)){dd.classList.remove('open');ch.classList.remove('open')}
+});
+
+// Logout
+$('logoutBtn').addEventListener('click',()=>{localStorage.removeItem('fixtrack_user');window.location.href='index.html'});
+
+// Mobile sidebar
+$('sidebarToggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
+
+// Load data
+const email=new URLSearchParams(window.location.search).get('email')||localStorage.getItem('fixtrack_user');
+fetch(API+'dashboard.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})})
+.then(r=>r.json()).then(d=>{
+  if(!d.success){window.location.href='index.html';return}
+  const disp=(d.user.username||d.user.email.split('@')[0]);
+  const dc=disp.charAt(0).toUpperCase()+disp.slice(1);
+  userName.textContent=dc;userEmail.textContent=d.user.email;avatar.textContent=disp.charAt(0).toUpperCase();
+  dropName.textContent=dc;dropEmail.textContent=d.user.email;dropAvatar.textContent=disp.charAt(0).toUpperCase();
+  if(d.user.email)localStorage.setItem('fixtrack_user',d.user.email);
+  renderKpis(d.stats||{});
+  if(d.users)renderUsers(d.users);
+}).catch(()=>{renderKpis({})});
+
+gsap.from('.main',{opacity:0,y:8,duration:0.35,ease:'power2.out'});
+gsap.from('.kc',{opacity:0,y:10,duration:0.3,stagger:0.05,delay:0.15,ease:'power2.out'});
+})();
+</script>
+</body>
+</html>
