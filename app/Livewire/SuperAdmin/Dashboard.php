@@ -77,10 +77,10 @@ class Dashboard extends Component
             : '0.0%';
 
         return [
-            ['label' => 'Active bookings', 'value' => Number::format($activeBookings), 'icon' => 'clipboard-document-list'],
-            ['label' => 'Bookings today', 'value' => Number::format($bookingsToday), 'icon' => 'calendar-days'],
+            ['label' => 'Active bookings', 'value' => (string) Number::format($activeBookings), 'icon' => 'clipboard-document-list'],
+            ['label' => 'Bookings today', 'value' => (string) Number::format($bookingsToday), 'icon' => 'calendar-days'],
             ['label' => 'Completion rate', 'value' => $completionRate, 'icon' => 'chart-bar'],
-            ['label' => 'Action required', 'value' => Number::format($actionRequired), 'icon' => 'exclamation-triangle'],
+            ['label' => 'Action required', 'value' => (string) Number::format($actionRequired), 'icon' => 'exclamation-triangle'],
         ];
     }
 
@@ -278,7 +278,7 @@ class Dashboard extends Component
             ->get()
             ->map(fn (Booking $booking): array => [
                 'reference' => (string) $booking->reference,
-                'customer' => (string) ($booking->customer?->name ?? '—'),
+                'customer' => (string) data_get($booking->customer, 'name', '—'),
                 'service' => $this->serviceLabel($booking->service_type),
                 'status' => $this->statusLabel((string) $booking->status),
                 'statusColor' => $this->statusColor((string) $booking->status),
@@ -325,7 +325,7 @@ class Dashboard extends Component
                 ->get()
                 ->map(fn (Booking $booking): array => [
                     'title' => (string) $booking->reference,
-                    'detail' => $this->serviceLabel($booking->service_type).' · '.((string) ($booking->customer?->name ?? '—')),
+                    'detail' => $this->serviceLabel($booking->service_type).' · '.((string) data_get($booking->customer, 'name', '—')),
                     'status' => $this->statusLabel((string) $booking->status),
                     'color' => $this->statusColor((string) $booking->status),
                 ])
@@ -342,7 +342,7 @@ class Dashboard extends Component
                 ->get()
                 ->map(fn (TechnicianVerification $verification): array => [
                     'title' => 'Technician verification',
-                    'detail' => (string) ($verification->technician?->name ?? '—'),
+                    'detail' => (string) data_get($verification->technician, 'name', '—'),
                     'status' => 'Review',
                     'color' => 'violet',
                 ])

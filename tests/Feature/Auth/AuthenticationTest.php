@@ -10,6 +10,7 @@ test('login screen can be rendered', function () {
     $response->assertOk()
         ->assertSee('Welcome back')
         ->assertSee('auth-success')
+        ->assertSee('auth-login-success')
         ->assertSee('fixtrack-logo.png')
         ->assertSee('auth-icon-button')
         ->assertSee('auth-google-button')
@@ -30,6 +31,20 @@ test('users can authenticate using the login screen', function () {
         ->assertRedirect(route('dashboard', absolute: false));
 
     $this->assertAuthenticated();
+});
+
+test('technician login marks the technician available', function () {
+    $technician = User::factory()->create([
+        'role' => 'technician',
+        'availability_status' => 'offline',
+    ]);
+
+    $this->post(route('login.store'), [
+        'email' => $technician->email,
+        'password' => 'password',
+    ]);
+
+    expect($technician->fresh()->availability_status)->toBe('available');
 });
 
 test('google sign in requires configured credentials', function () {
@@ -72,6 +87,47 @@ test('existing users can sign in with google', function () {
     $response->assertRedirect(route('dashboard'));
     $this->assertAuthenticatedAs($user);
     expect($user->fresh()->google_id)->toBe('google-sub-123');
+});
+
+test('google sign in retries a transient token provider failure', function () {
+    config()->set('services.google', [
+        'client_id' => 'client-id',
+        'client_secret' => 'client-secret',
+        'redirect' => route('auth.google.callback'),
+    ]);
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response([], 503),
+        'https://openidconnect.googleapis.com/v1/userinfo' => Http::response([], 503),
+    ]);
+
+    $response = $this->withSession(['google_oauth_state' => 'state-retry'])
+        ->get(route('auth.google.callback', [
+            'code' => 'authorization-code',
+            'state' => 'state-retry',
+        ]));
+
+    $response->assertRedirect(route('login'))
+        ->assertSessionHasErrors('email');
+    Http::assertSentCount(2);
+});
+
+test('google callback rejects an invalid oauth state before contacting google', function () {
+    config()->set('services.google', [
+        'client_id' => 'client-id',
+        'client_secret' => 'client-secret',
+        'redirect' => route('auth.google.callback'),
+    ]);
+    Http::fake();
+
+    $response = $this->withSession(['google_oauth_state' => 'expected-state'])
+        ->get(route('auth.google.callback', [
+            'code' => 'authorization-code',
+            'state' => 'wrong-state',
+        ]));
+
+    $response->assertRedirect(route('login'))
+        ->assertSessionHasErrors('email');
+    Http::assertNothingSent();
 });
 
 test('google sign in keeps two factor authentication enabled', function () {
@@ -157,4 +213,15 @@ test('users can logout', function () {
     $response->assertRedirect(route('home'));
 
     $this->assertGuest();
+});
+
+test('technician logout marks the technician offline', function () {
+    $technician = User::factory()->create([
+        'role' => 'technician',
+        'availability_status' => 'available',
+    ]);
+
+    $this->actingAs($technician)->post(route('logout'));
+
+    expect($technician->fresh()->availability_status)->toBe('offline');
 });

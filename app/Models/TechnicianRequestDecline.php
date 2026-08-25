@@ -12,11 +12,13 @@ class TechnicianRequestDecline extends Model
         'booking_id',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id');
     }
 
+    /** @return BelongsTo<Booking, $this> */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);

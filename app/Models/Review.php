@@ -21,16 +21,19 @@ class Review extends Model
         return ['rating' => 'integer'];
     }
 
+    /** @return BelongsTo<Booking, $this> */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'customer_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id');

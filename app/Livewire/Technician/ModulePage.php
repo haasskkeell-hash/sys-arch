@@ -2,13 +2,18 @@
 
 namespace App\Livewire\Technician;
 
+use App\Concerns\HandlesProfilePhoto;
 use App\Models\AuditLog;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\PlatformSetting;
+use App\Models\Quotation;
 use App\Models\Review;
+use App\Models\ServiceCatalog;
 use App\Models\SupportTicket;
 use App\Models\TechnicianRequestDecline;
 use App\Models\TechnicianVerification;
+use App\Models\User;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -31,6 +36,7 @@ use Throwable;
 #[Title('Technician Workspace')]
 class ModulePage extends Component
 {
+    use HandlesProfilePhoto;
     use WithPagination;
 
     public string $moduleSlug = 'overview';
@@ -55,7 +61,18 @@ class ModulePage extends Component
 
     public string $confirmationVariant = 'danger';
 
-    /** @var array{operation: string, parameters: array<int, mixed>}|null */
+    #[Locked]
+    public ?int $quotationBookingId = null;
+
+    public bool $showQuotation = false;
+
+    public string $assessmentNotes = '';
+
+    public string $laborAmount = '';
+
+    public string $materialsAmount = '';
+
+    /** @var array{operation: string, parameters: array<int, mixed>, idempotency_key: string}|null */
     #[Locked]
     public ?array $pendingConfirmation = null;
 
@@ -149,6 +166,7 @@ class ModulePage extends Component
             'module' => self::modules()[$this->moduleSlug],
             'moduleState' => $this->moduleState(),
             'content' => $this->contentFor($this->moduleSlug),
+            'locationTrackingActive' => $this->locationTrackingActive(),
         ]);
     }
 
@@ -183,9 +201,19 @@ class ModulePage extends Component
         $this->validateValue($status, ['available', 'offline']);
         abort_unless($this->columnExists('users', 'availability_status'), 422, 'Technician availability is not available yet.');
 
-        auth()->user()->update([
-            'availability_status' => $status,
-        ]);
+        DB::transaction(function () use ($status): void {
+            $technician = User::query()->lockForUpdate()->findOrFail(auth()->id());
+            abort_if(
+                $status === 'offline'
+                && Booking::query()->whereBelongsTo($technician, 'technician')->whereIn('status', Booking::ACTIVE_STATUSES)->exists(),
+                409,
+                'Complete your active jobs before going offline.',
+            );
+
+            $technician->update([
+                'availability_status' => $status,
+            ]);
+        });
 
         $this->recordAudit('technician.availability_updated', 'user', (int) auth()->id(), ['availability_status' => $status]);
         $this->successToast($status === 'available' ? 'You are now online.' : 'You are now offline.');
@@ -199,6 +227,7 @@ class ModulePage extends Component
         $this->pendingConfirmation = [
             'operation' => $confirmation['operation'],
             'parameters' => $confirmation['parameters'],
+            'idempotency_key' => Str::uuid()->toString(),
         ];
         $this->confirmationTitle = $confirmation['title'];
         $this->confirmationDescription = $confirmation['description'];
@@ -235,78 +264,162 @@ class ModulePage extends Component
         $this->confirmationVariant = 'danger';
     }
 
-    public function acceptRequest(int $bookingId): void
+    public function acceptRequest(int $bookingId, ?string $idempotencyKey = null): void
     {
         $this->authorizeTechnician();
+        $idempotencyKey = $idempotencyKey !== null ? $this->idempotencyKey($idempotencyKey) : null;
 
-        DB::transaction(function () use ($bookingId): void {
+        DB::transaction(function () use ($bookingId, $idempotencyKey): void {
             $booking = Booking::query()->lockForUpdate()->find($bookingId);
-            abort_unless($booking, 404);
+            abort_unless($booking !== null, 404);
+            $technician = User::query()->lockForUpdate()->findOrFail(auth()->id());
+
+            abort_unless($technician->isTechnician() && $technician->hasActiveAccount(), 403, 'Your technician account is not active.');
+
+            if ($idempotencyKey !== null && $booking->statusHistory()->where('idempotency_key', $idempotencyKey)->exists()) {
+                abort_unless((int) $booking->assigned_technician_id === (int) $technician->id, 403);
+
+                return;
+            }
+
             abort_if($booking->assigned_technician_id !== null || ! in_array($booking->status, ['pending', 'matching'], true), 409, 'This request is no longer available.');
+            abort_unless($technician->availability_status === 'available', 409, 'Go online before accepting requests.');
+
+            $verification = $this->tableExists('technician_verifications')
+                ? TechnicianVerification::query()->whereBelongsTo($technician, 'technician')->where('status', 'approved')->first()
+                : null;
+            abort_unless($verification !== null, 403, 'Your technician verification must be approved before accepting requests.');
             abort_unless(
-                $this->tableExists('technician_verifications')
-                && TechnicianVerification::query()->whereBelongsTo(auth()->user(), 'technician')->where('status', 'approved')->exists(),
-                403,
-                'Your technician verification must be approved before accepting requests.',
+                $verification->supportsService((string) $booking->service_type),
+                409,
+                'This request is outside your approved service categories.',
+            );
+
+            $maxActiveJobs = max(1, (int) ($this->tableExists('platform_settings') ? PlatformSetting::query()->where('key', 'max_active_jobs')->value('value') : 1));
+            abort_if(
+                Booking::query()->whereBelongsTo($technician, 'technician')->whereIn('status', Booking::ACTIVE_STATUSES)->count() >= $maxActiveJobs,
+                409,
+                'You have reached your active job limit.',
             );
             abort_if(
-                $this->columnExists('users', 'account_status')
-                && auth()->user()->account_status !== 'active',
-                403,
-                'Your technician account is not active.',
+                $booking->scheduled_at !== null
+                && Booking::query()->whereBelongsTo($technician, 'technician')->whereIn('status', Booking::ACTIVE_STATUSES)->where('scheduled_at', $booking->scheduled_at)->exists(),
+                409,
+                'You already have a job scheduled at this time.',
             );
             abort_if(
                 $this->tableExists('technician_request_declines')
-                && TechnicianRequestDecline::query()->whereBelongsTo(auth()->user(), 'technician')->whereBelongsTo($booking, 'booking')->exists(),
+                && TechnicianRequestDecline::query()->whereBelongsTo($technician, 'technician')->whereBelongsTo($booking, 'booking')->exists(),
                 409,
                 'You already declined this request.',
             );
 
             $booking->update([
-                'assigned_technician_id' => auth()->id(),
-                'status' => 'assigned',
+                'assigned_technician_id' => $technician->id,
             ]);
+            $booking->transitionTo('en_route', $technician, 'Accepted request.', ['source' => 'technician'], $idempotencyKey);
+
+            if ($this->columnExists('users', 'availability_status')) {
+                $technician->update(['availability_status' => 'busy']);
+            }
         });
 
         $this->recordAudit('technician.request_accepted', 'booking', $bookingId);
-        $this->successToast('Job accepted and added to My Jobs.');
+        $this->successToast('Job accepted. You are now en route.');
+        $this->redirectRoute('technician.module', navigate: true);
     }
 
     public function declineRequest(int $bookingId): void
     {
         $this->authorizeTechnician();
-        $booking = Booking::query()->find($bookingId);
-        abort_unless($booking, 404);
-        abort_if($booking->assigned_technician_id !== null || ! in_array($booking->status, ['pending', 'matching'], true), 409, 'This request is no longer available.');
         abort_unless($this->tableExists('technician_request_declines'), 422, 'Request decline tracking is not available yet.');
 
-        TechnicianRequestDecline::query()->firstOrCreate([
-            'technician_id' => auth()->id(),
-            'booking_id' => $bookingId,
-        ]);
+        DB::transaction(function () use ($bookingId): void {
+            $booking = Booking::query()->lockForUpdate()->find($bookingId);
+            abort_unless($booking !== null, 404);
+            abort_if($booking->assigned_technician_id !== null || ! in_array($booking->status, ['pending', 'matching'], true), 409, 'This request is no longer available.');
+
+            TechnicianRequestDecline::query()->firstOrCreate([
+                'technician_id' => auth()->id(),
+                'booking_id' => $bookingId,
+            ]);
+        });
 
         $this->recordAudit('technician.request_declined', 'booking', $bookingId);
         $this->successToast('Request removed from your queue.');
     }
 
-    public function updateBookingStatus(int $bookingId, string $status): void
+    public function cancelBooking(int $bookingId, ?string $idempotencyKey = null): void
+    {
+        $this->authorizeTechnician();
+        $idempotencyKey = $idempotencyKey !== null ? $this->idempotencyKey($idempotencyKey) : null;
+
+        DB::transaction(function () use ($bookingId, $idempotencyKey): void {
+            $booking = Booking::query()->lockForUpdate()->find($bookingId);
+            abort_unless($booking !== null, 404);
+            $technician = User::query()->lockForUpdate()->findOrFail(auth()->id());
+
+            $history = $idempotencyKey !== null
+                ? $booking->statusHistory()->where('idempotency_key', $idempotencyKey)->first()
+                : null;
+
+            if ($history !== null) {
+                abort_unless((int) $history->actor_id === (int) $technician->id, 403);
+
+                return;
+            }
+
+            abort_unless((int) $booking->assigned_technician_id === (int) $technician->id, 403);
+            abort_unless(in_array($booking->status, Booking::ACTIVE_STATUSES, true), 409, 'This job can no longer be cancelled.');
+
+            $reason = 'Cancelled by technician.';
+            $booking->update([
+                'cancellation_reason' => $reason,
+            ]);
+            $booking->transitionTo('cancelled', $technician, $reason, ['source' => 'technician'], $idempotencyKey);
+            $booking->update([
+                'assigned_technician_id' => null,
+            ]);
+
+            if (! Booking::query()->whereBelongsTo($technician, 'technician')->whereIn('status', Booking::ACTIVE_STATUSES)->exists()) {
+                $technician->update(['availability_status' => 'available']);
+            }
+        });
+
+        $this->recordAudit('technician.booking_cancelled', 'booking', $bookingId, [
+            'reason' => 'Cancelled by technician.',
+        ]);
+        $this->successToast('Job cancelled. You are available for the next request.');
+    }
+
+    public function updateBookingStatus(int $bookingId, string $status, ?string $idempotencyKey = null): void
     {
         $this->authorizeTechnician();
         $this->validateValue($status, ['en_route', 'in_progress', 'completed']);
+        $idempotencyKey = $idempotencyKey !== null ? $this->idempotencyKey($idempotencyKey) : null;
         $paymentId = null;
         $paymentCreated = false;
 
-        DB::transaction(function () use ($bookingId, $status, &$paymentId, &$paymentCreated): void {
+        DB::transaction(function () use ($bookingId, $status, $idempotencyKey, &$paymentId, &$paymentCreated): void {
             $booking = Booking::query()->lockForUpdate()->find($bookingId);
-            abort_unless($booking, 404);
-            abort_unless((int) $booking->assigned_technician_id === (int) auth()->id(), 403);
+            abort_unless($booking !== null, 404);
+            $technician = User::query()->lockForUpdate()->findOrFail(auth()->id());
+
+            abort_unless((int) $booking->assigned_technician_id === (int) $technician->id, 403);
+
+            if ($idempotencyKey !== null && $booking->statusHistory()->where('idempotency_key', $idempotencyKey)->exists()) {
+                return;
+            }
+
             abort_if($status === 'en_route' && $booking->status !== 'assigned', 422, 'Only assigned jobs can start a route.');
             abort_if($status === 'in_progress' && ! in_array($booking->status, ['assigned', 'en_route'], true), 422, 'Only assigned jobs can be started.');
-            abort_if($status === 'completed' && $booking->status !== 'in_progress', 422, 'Only active jobs can be completed.');
+            abort_if($status === 'completed' && ! in_array($booking->status, ['en_route', 'in_progress'], true), 422, 'Only active jobs can be completed.');
 
-            $booking->update([
-                'status' => $status,
-            ]);
+            $booking->transitionTo($status, $technician, match ($status) {
+                'en_route' => 'Route started.',
+                'in_progress' => 'Repair started.',
+                default => 'Job completed.',
+            }, ['source' => 'technician'], $idempotencyKey);
 
             if ($status === 'completed' && $this->tableExists('payments')) {
                 $payment = Booking::query()->findOrFail($bookingId)->ensurePayment();
@@ -314,8 +427,8 @@ class ModulePage extends Component
                 $paymentCreated = $payment->wasRecentlyCreated;
             }
 
-            if ($status === 'completed' && ! Booking::query()->whereBelongsTo(auth()->user(), 'technician')->whereIn('status', ['assigned', 'en_route', 'in_progress'])->exists()) {
-                auth()->user()->update(['availability_status' => 'available']);
+            if ($status === 'completed' && ! Booking::query()->whereBelongsTo($technician, 'technician')->whereIn('status', Booking::ACTIVE_STATUSES)->exists()) {
+                $technician->update(['availability_status' => 'available']);
             }
         });
 
@@ -330,6 +443,93 @@ class ModulePage extends Component
         });
     }
 
+    public function updateLocation(float $latitude, float $longitude): void
+    {
+        $this->authorizeTechnician();
+        abort_unless($this->locationTrackingActive(), 409, 'Location updates require an active assignment.');
+
+        $validated = Validator::make([
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ], [
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ])->validate();
+
+        auth()->user()->forceFill([
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'last_seen_at' => now(),
+        ])->save();
+    }
+
+    public function openQuotation(int $bookingId): void
+    {
+        $this->authorizeTechnician();
+        abort_unless($this->tableExists('quotations'), 422, 'Quotations are not available yet.');
+
+        $booking = $this->assignedBookingsQuery()->whereKey($bookingId)->firstOrFail();
+        abort_unless(in_array($booking->status, ['assigned', 'en_route', 'in_progress'], true), 422, 'Only active jobs can have a quotation.');
+
+        $quotation = Quotation::query()->where('booking_id', $booking->id)->first();
+        $this->quotationBookingId = $booking->id;
+        $this->assessmentNotes = $quotation !== null ? (string) $quotation->assessment_notes : '';
+        $this->laborAmount = $quotation?->labor_amount !== null ? (string) $quotation->labor_amount : '';
+        $this->materialsAmount = $quotation?->materials_amount !== null ? (string) $quotation->materials_amount : '';
+        $this->showQuotation = true;
+        $this->resetValidation();
+    }
+
+    public function saveQuotation(): void
+    {
+        $this->authorizeTechnician();
+        abort_unless($this->tableExists('quotations'), 422, 'Quotations are not available yet.');
+
+        $validated = Validator::make([
+            'assessment_notes' => $this->assessmentNotes,
+            'labor_amount' => $this->laborAmount,
+            'materials_amount' => $this->materialsAmount,
+        ], [
+            'assessment_notes' => ['required', 'string', 'max:2000'],
+            'labor_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'materials_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+        ])->validate();
+
+        $booking = $this->assignedBookingsQuery()->whereKey($this->quotationBookingId)->firstOrFail();
+        abort_unless(in_array($booking->status, ['assigned', 'en_route', 'in_progress'], true), 422, 'Only active jobs can have a quotation.');
+
+        $quotation = Quotation::query()->updateOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'technician_id' => auth()->id(),
+                'assessment_notes' => $validated['assessment_notes'],
+                'labor_amount' => $validated['labor_amount'],
+                'materials_amount' => $validated['materials_amount'],
+                'total_amount' => (float) $validated['labor_amount'] + (float) $validated['materials_amount'],
+                'status' => 'awaiting_approval',
+                'sent_at' => now(),
+                'responded_at' => null,
+            ],
+        );
+
+        $this->recordAudit('technician.quotation_sent', 'quotation', $quotation->id, [
+            'booking_id' => $booking->id,
+            'total_amount' => $quotation->total_amount,
+        ]);
+        $this->closeQuotation();
+        $this->successToast('Quotation sent to the customer.');
+    }
+
+    public function closeQuotation(): void
+    {
+        $this->showQuotation = false;
+        $this->quotationBookingId = null;
+        $this->assessmentNotes = '';
+        $this->laborAmount = '';
+        $this->materialsAmount = '';
+        $this->resetValidation();
+    }
+
     /**
      * @return array{title: string, description: string, label: string, variant: string, operation: string, parameters: array<int, mixed>}
      */
@@ -340,7 +540,7 @@ class ModulePage extends Component
         return match ($action) {
             'accept-request' => [
                 'title' => 'Accept this request?',
-                'description' => 'This request will be assigned to you and moved to My Jobs.',
+                'description' => 'This request will be assigned to you and marked as en route.',
                 'label' => 'Accept request',
                 'variant' => 'primary',
                 'operation' => 'acceptRequest',
@@ -378,19 +578,29 @@ class ModulePage extends Component
                 'operation' => 'updateBookingStatus',
                 'parameters' => [$targetId, 'completed'],
             ],
+            'cancel-job' => [
+                'title' => 'Cancel this job?',
+                'description' => 'The customer will be notified and the job will be released from your queue.',
+                'label' => 'Cancel job',
+                'variant' => 'danger',
+                'operation' => 'cancelBooking',
+                'parameters' => [$targetId],
+            ],
             default => abort(422, 'The requested confirmation is not available.'),
         };
     }
 
-    /** @param array{operation: string, parameters: array<int, mixed>} $pending */
+    /** @param array{operation: string, parameters: array<int, mixed>, idempotency_key?: string} $pending */
     private function dispatchConfirmedAction(array $pending): void
     {
         $parameters = $pending['parameters'];
+        $idempotencyKey = $pending['idempotency_key'] ?? null;
 
         match ($pending['operation']) {
-            'acceptRequest' => $this->acceptRequest((int) $parameters[0]),
+            'acceptRequest' => $this->acceptRequest((int) $parameters[0], $idempotencyKey),
             'declineRequest' => $this->declineRequest((int) $parameters[0]),
-            'updateBookingStatus' => $this->updateBookingStatus((int) $parameters[0], (string) $parameters[1]),
+            'updateBookingStatus' => $this->updateBookingStatus((int) $parameters[0], (string) $parameters[1], $idempotencyKey),
+            'cancelBooking' => $this->cancelBooking((int) $parameters[0], $idempotencyKey),
             default => abort(422, 'The requested confirmation is not available.'),
         };
     }
@@ -414,6 +624,14 @@ class ModulePage extends Component
         Flux::toast(variant: 'success', text: $message);
     }
 
+    private function idempotencyKey(string $key): string
+    {
+        $key = trim($key);
+        abort_unless(Str::isUuid($key), 422, 'The request could not be verified. Please try again.');
+
+        return $key;
+    }
+
     /** @return array{label: string, color: string} */
     private function moduleState(): array
     {
@@ -430,6 +648,7 @@ class ModulePage extends Component
             'verification-profile' => ['label' => 'Account status', 'color' => 'teal'],
             'notifications' => ['label' => 'Latest updates', 'color' => 'sky'],
             'support' => ['label' => 'Help center', 'color' => 'amber'],
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -447,6 +666,7 @@ class ModulePage extends Component
             'verification-profile' => $this->profileContent(),
             'notifications' => $this->notificationsContent(),
             'support' => $this->supportContent(),
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -456,7 +676,7 @@ class ModulePage extends Component
         $bookings = $this->assignedBookingsQuery()->latest('bookings.created_at')->limit(50)->get();
         $incomingRequestsQuery = $this->availableRequestsQuery();
         $completed = $bookings->where('status', 'completed');
-        $closed = $bookings->whereIn('status', ['completed', 'cancelled'])->count();
+        $closed = $bookings->whereIn('status', ['completed', 'cancelled', 'no_show'])->count();
         $profile = $this->technicianProfile();
         $activeJob = $bookings->first(fn (object $booking): bool => $booking->status === 'in_progress')
             ?? $bookings->first(fn (object $booking): bool => $booking->status === 'en_route')
@@ -513,7 +733,7 @@ class ModulePage extends Component
         $query = $this->assignedBookingsQuery();
 
         if ($this->jobStatus !== 'all') {
-            $this->validateValue($this->jobStatus, ['all', 'assigned', 'en_route', 'in_progress', 'completed', 'cancelled']);
+            $this->validateValue($this->jobStatus, ['all', 'assigned', 'en_route', 'in_progress', 'completed', 'cancelled', 'no_show']);
             $query->where('status', $this->jobStatus);
         }
 
@@ -537,6 +757,7 @@ class ModulePage extends Component
                 ['label' => 'Completed', 'value' => Number::format((clone $base)->where('status', 'completed')->count()), 'icon' => 'check-circle'],
             ],
             'jobs' => $query->latest('created_at')->paginate(10, ['*'], 'jobsPage'),
+            'quotationsAvailable' => $this->tableExists('quotations'),
         ];
     }
 
@@ -551,7 +772,7 @@ class ModulePage extends Component
         } elseif ($this->scheduleRange === 'completed') {
             $scheduled->where('status', 'completed');
         } elseif ($this->scheduleRange === 'upcoming') {
-            $scheduled->where('scheduled_at', '>=', now())->whereNotIn('status', ['completed', 'cancelled']);
+            $scheduled->where('scheduled_at', '>=', now())->whereNotIn('status', ['completed', 'cancelled', 'no_show']);
         } else {
             $this->validateValue($this->scheduleRange, ['upcoming', 'today', 'completed', 'all']);
         }
@@ -569,7 +790,7 @@ class ModulePage extends Component
         return [
             'stats' => [
                 ['label' => 'Today', 'value' => Number::format((clone $allScheduled)->whereDate('scheduled_at', today())->count()), 'icon' => 'calendar-days'],
-                ['label' => 'Upcoming', 'value' => Number::format((clone $allScheduled)->where('scheduled_at', '>=', now())->whereNotIn('status', ['completed', 'cancelled'])->count()), 'icon' => 'clock'],
+                ['label' => 'Upcoming', 'value' => Number::format((clone $allScheduled)->where('scheduled_at', '>=', now())->whereNotIn('status', ['completed', 'cancelled', 'no_show'])->count()), 'icon' => 'clock'],
                 ['label' => 'In progress', 'value' => Number::format((clone $allScheduled)->whereIn('status', ['en_route', 'in_progress'])->count()), 'icon' => 'arrow-path'],
                 ['label' => 'Completed', 'value' => Number::format((clone $allScheduled)->where('status', 'completed')->count()), 'icon' => 'check-circle'],
             ],
@@ -587,7 +808,7 @@ class ModulePage extends Component
         return [
             'stats' => [
                 ['label' => 'Active routes', 'value' => Number::format($routeJobs->count()), 'icon' => 'map'],
-                ['label' => 'Current job', 'value' => $currentRoute?->reference ?? 'None', 'icon' => 'clipboard-document-list'],
+                ['label' => 'Current job', 'value' => $currentRoute instanceof Booking ? (string) $currentRoute->reference : 'None', 'icon' => 'clipboard-document-list'],
                 ['label' => 'Location signal', 'value' => $user->latitude !== null && $user->longitude !== null ? 'Live' : 'Waiting', 'icon' => 'map-pin'],
                 ['label' => 'Availability', 'value' => Str::headline((string) ($user->availability_status ?? 'offline')), 'icon' => 'bolt'],
             ],
@@ -664,21 +885,34 @@ class ModulePage extends Component
         $requests = $this->availableRequestsQuery()->count();
         $activeJobs = $this->assignedBookingsQuery()->whereIn('status', ['assigned', 'en_route', 'in_progress'])->count();
         $profile = $this->technicianProfile();
-        $items = [];
+        $items = collect();
+
+        if ($this->tableExists('notifications')) {
+            foreach (auth()->user()->notifications()->latest()->limit(10)->get() as $notification) {
+                $data = $notification->data;
+                $items->push([
+                    'title' => $data['title'] ?? 'Booking update',
+                    'detail' => $data['detail'] ?? 'A service booking was updated.',
+                    'status' => $data['status'] ?? 'info',
+                    'date' => $notification->created_at,
+                    'unread' => $notification->read_at === null,
+                ]);
+            }
+        }
 
         if ($requests > 0) {
-            $items[] = ['title' => 'New job requests', 'detail' => Number::format($requests).' matching customer requests are waiting for your review.', 'status' => 'attention'];
+            $items->push(['title' => 'New job requests', 'detail' => Number::format($requests).' matching customer requests are waiting for your review.', 'status' => 'attention']);
         }
         if ($activeJobs > 0) {
-            $items[] = ['title' => 'Active assignments', 'detail' => Number::format($activeJobs).' assigned job(s) are currently in your service flow.', 'status' => 'active'];
+            $items->push(['title' => 'Active assignments', 'detail' => Number::format($activeJobs).' assigned job(s) are currently in your service flow.', 'status' => 'active']);
         }
         if (($profile['status'] ?? 'not_submitted') !== 'approved') {
-            $items[] = ['title' => 'Verification update', 'detail' => 'Complete verification so dispatch can send you new assignments.', 'status' => $profile['status'] ?? 'pending'];
+            $items->push(['title' => 'Verification update', 'detail' => 'Complete verification so dispatch can send you new assignments.', 'status' => $profile['status'] ?? 'pending']);
         }
 
         return [
             'stats' => [
-                ['label' => 'Updates', 'value' => Number::format(count($items)), 'icon' => 'bell'],
+                ['label' => 'Updates', 'value' => Number::format($items->count()), 'icon' => 'bell'],
                 ['label' => 'Job requests', 'value' => Number::format($requests), 'icon' => 'queue-list'],
                 ['label' => 'Active jobs', 'value' => Number::format($activeJobs), 'icon' => 'wrench-screwdriver'],
             ],
@@ -707,7 +941,8 @@ class ModulePage extends Component
 
     private function authorizeTechnician(): void
     {
-        abort_unless(auth()->user()?->isTechnician(), 403);
+        $user = auth()->user();
+        abort_unless($user instanceof User && $user->isTechnician() && $user->hasActiveAccount(), 403);
     }
 
     /** @param array<int, string> $allowed */
@@ -716,20 +951,57 @@ class ModulePage extends Component
         return Validator::make(['value' => $value], ['value' => ['required', Rule::in($allowed)]])->validate()['value'];
     }
 
+    /** @return Builder<Booking> */
     private function assignedBookingsQuery(): Builder
     {
-        return Booking::query()->with(['customer:id,name', 'service:code,name'])->whereBelongsTo(auth()->user(), 'technician');
+        return Booking::query()->with(['customer:id,name,avatar_path', 'service:code,name'])->whereBelongsTo(auth()->user(), 'technician');
     }
 
+    private function locationTrackingActive(): bool
+    {
+        return $this->assignedBookingsQuery()->whereIn('status', ['assigned', 'en_route', 'in_progress'])->exists();
+    }
+
+    /** @return Builder<Booking> */
     private function availableRequestsQuery(): Builder
     {
-        $query = Booking::query()->with(['customer:id,name', 'service:code,name'])->whereNull('assigned_technician_id')->whereIn('status', ['pending', 'matching']);
+        $query = Booking::query()->with(['customer:id,name,avatar_path', 'service:code,name'])->whereNull('assigned_technician_id')->whereIn('status', ['pending', 'matching']);
+        $serviceCategories = $this->approvedServiceCategories();
+
+        if ($serviceCategories === []) {
+            $query->whereRaw('1 = 0');
+        } else {
+            $query->whereIn('service_type', ServiceCatalog::matchingCodes($serviceCategories));
+        }
 
         if ($this->tableExists('technician_request_declines')) {
             $query->whereNotIn('id', TechnicianRequestDecline::query()->whereBelongsTo(auth()->user(), 'technician')->select('booking_id'));
         }
 
         return $query;
+    }
+
+    /** @return array<int, string> */
+    private function approvedServiceCategories(): array
+    {
+        if (! $this->tableExists('technician_verifications')) {
+            return [];
+        }
+
+        $serviceCategories = TechnicianVerification::query()
+            ->whereBelongsTo(auth()->user(), 'technician')
+            ->where('status', 'approved')
+            ->value('service_categories');
+
+        if (is_string($serviceCategories)) {
+            $serviceCategories = $this->decodeJson($serviceCategories);
+        }
+
+        if (! is_array($serviceCategories)) {
+            return [];
+        }
+
+        return ServiceCatalog::normalizeCodes($serviceCategories);
     }
 
     /** @return array<string, mixed>|null */
@@ -748,11 +1020,22 @@ class ModulePage extends Component
             return null;
         }
 
+        $serviceCategories = $verification->getAttribute('service_categories');
+        $serviceCategories = is_array($serviceCategories) ? $serviceCategories : $this->decodeJson($serviceCategories);
+        $serviceCategories = ServiceCatalog::normalizeCodes($serviceCategories);
+        $serviceLabels = ServiceCatalog::activeCatalog()
+            ->keyBy('code')
+            ->only($serviceCategories)
+            ->map(static fn (ServiceCatalog $service): string => (string) $service->name)
+            ->values()
+            ->all();
+
         return [
             'id' => $verification->id,
             'status' => (string) $verification->status,
             'risk_level' => (string) $verification->risk_level,
-            'service_categories' => is_array($verification->service_categories) ? $verification->service_categories : $this->decodeJson($verification->service_categories),
+            'service_categories' => $serviceCategories,
+            'service_labels' => $serviceLabels,
             'years_experience' => (int) $verification->years_experience,
             'service_area' => $verification->service_area,
             'phone' => $verification->phone,

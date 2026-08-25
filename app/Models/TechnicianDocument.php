@@ -21,6 +21,7 @@ class TechnicianDocument extends Model
         return ['expires_at' => 'date'];
     }
 
+    /** @return BelongsTo<TechnicianVerification, $this> */
     public function verification(): BelongsTo
     {
         return $this->belongsTo(TechnicianVerification::class);

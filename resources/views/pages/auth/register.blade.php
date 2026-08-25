@@ -1,4 +1,12 @@
 <x-layouts::auth :title="__('Register')">
+    @php
+        $selectedServiceCategories = old('service_categories');
+        if (! is_array($selectedServiceCategories)) {
+            $legacyServiceCategory = old('service_category');
+            $selectedServiceCategories = $legacyServiceCategory ? [$legacyServiceCategory] : [];
+        }
+    @endphp
+
     <div
         class="auth-stack"
         x-data='{
@@ -138,15 +146,28 @@
                         <label for="phone" class="auth-label">{{ __('Phone number') }}</label>
                     </div>
 
-                    <div class="auth-field auth-field-select @error('service_category') auth-field-error @enderror">
-                        <select id="service_category" name="service_category" class="auth-select" x-bind:required="role === 'technician'">
-                            <option value="" disabled @selected(! old('service_category'))>{{ __('Select a service category') }}</option>
-                            <option value="aircon" @selected(old('service_category') === 'aircon')>{{ __('Aircon cleaning') }}</option>
-                            <option value="plumbing" @selected(old('service_category') === 'plumbing')>{{ __('Plumbing repair') }}</option>
-                            <option value="electrical" @selected(old('service_category') === 'electrical')>{{ __('Electrical repair') }}</option>
-                            <option value="appliance" @selected(old('service_category') === 'appliance')>{{ __('Appliance repair') }}</option>
-                        </select>
-                        <label for="service_category" class="auth-label">{{ __('Primary service') }}</label>
+                    <div class="auth-field @error('service_categories') auth-field-error @enderror">
+                        <div class="text-sm font-medium text-zinc-800">{{ __('What work can you personally handle?') }}</div>
+                        <p class="auth-helper">{{ __('Choose one or more exact services. You will only receive matching requests.') }}</p>
+                        <div class="grid gap-3">
+                            @foreach ($serviceCatalog->groupBy('category') as $category => $services)
+                                <fieldset class="rounded-lg border border-zinc-200 p-3">
+                                    <legend class="px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">{{ $category }}</legend>
+                                    <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                                        @foreach ($services as $service)
+                                            <label for="service-category-{{ $service->code }}" class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-200 p-3 transition hover:border-blue-400 hover:bg-blue-50/40">
+                                                <input id="service-category-{{ $service->code }}" name="service_categories[]" type="checkbox" value="{{ $service->code }}" class="mt-0.5 size-4 accent-blue-600" @checked(in_array($service->code, $selectedServiceCategories, true))>
+                                                <span class="min-w-0">
+                                                    <span class="block text-sm font-medium text-zinc-800">{{ $service->name }}</span>
+                                                    <span class="mt-0.5 block text-xs text-zinc-500">{{ $service->description }}</span>
+                                                </span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </fieldset>
+                            @endforeach
+                        </div>
+                        @error('service_categories')<p class="mt-2 text-xs text-red-600">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="grid gap-5 sm:grid-cols-2">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Concerns\HandlesProfilePhoto;
 use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Flux\Flux;
@@ -10,6 +11,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Title('Profile settings')] class extends Component {
+    use HandlesProfilePhoto;
     use ProfileValidationRules;
 
     public string $name = '';
@@ -82,6 +84,8 @@ new #[Title('Profile settings')] class extends Component {
     <flux:heading class="sr-only">{{ __('Profile settings') }}</flux:heading>
 
     <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
+        <x-profile-photo-editor :user="Auth::user()" :pending-photo="$profilePhoto" input-id="settings-profile-photo" />
+
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
 

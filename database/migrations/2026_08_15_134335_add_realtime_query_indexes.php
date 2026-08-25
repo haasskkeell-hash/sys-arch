@@ -77,7 +77,7 @@ return new class extends Migration
         $this->dropIndexes('audit_logs', ['audit_logs_created_at_index']);
     }
 
-    private function addIndexes(string $tableName, callable $indexes): void
+    private function addIndexes(string $tableName, Closure $indexes): void
     {
         if (! Schema::hasTable($tableName)) {
             return;

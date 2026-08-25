@@ -33,11 +33,13 @@ class WalkInEntry extends Model
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @return BelongsTo<ServiceCounter, $this> */
     public function counter(): BelongsTo
     {
         return $this->belongsTo(ServiceCounter::class, 'counter_id');

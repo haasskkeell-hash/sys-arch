@@ -229,9 +229,6 @@
                                                         @case('users')
                                                             <flux:menu.item as="button" type="button" icon="shield-check" wire:click="requestConfirmation('make-admin', {{ $rowId }})">Make admin</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="wrench-screwdriver" wire:click="requestConfirmation('make-technician', {{ $rowId }})">Make technician</flux:menu.item>
-                                                            <flux:menu.item as="button" type="button" icon="truck" wire:click="requestConfirmation('make-dispatcher', {{ $rowId }})">Make dispatcher</flux:menu.item>
-                                                            <flux:menu.item as="button" type="button" icon="chat-bubble-left-right" wire:click="requestConfirmation('make-support', {{ $rowId }})">Make support staff</flux:menu.item>
-                                                            <flux:menu.item as="button" type="button" icon="banknotes" wire:click="requestConfirmation('make-finance', {{ $rowId }})">Make finance staff</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="user" wire:click="requestConfirmation('make-customer', {{ $rowId }})">Make customer</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="check-circle" wire:click="updateUserStatus({{ $rowId }}, 'active')">Activate account</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="no-symbol" wire:click="requestConfirmation('suspend-user', {{ $rowId }})">Suspend account</flux:menu.item>
@@ -254,6 +251,7 @@
                                                             <flux:menu.item as="button" type="button" icon="play" wire:click="requestConfirmation('start-booking', {{ $rowId }})">Start job</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="check-circle" wire:click="requestConfirmation('complete-booking', {{ $rowId }})">Complete job</flux:menu.item>
                                                             <flux:menu.item as="button" type="button" icon="x-circle" wire:click="requestConfirmation('cancel-booking', {{ $rowId }})">Cancel booking</flux:menu.item>
+                                                            <flux:menu.item as="button" type="button" icon="exclamation-triangle" wire:click="requestConfirmation('mark-no-show', {{ $rowId }})">Mark no-show</flux:menu.item>
                                                             @break
                                                         @case('technicians')
                                                             <flux:menu.item as="button" type="button" icon="user-plus" wire:click="updateTechnicianAvailability({{ $rowId }}, 'available')">Set available</flux:menu.item>

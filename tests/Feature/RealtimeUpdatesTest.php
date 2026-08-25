@@ -82,6 +82,67 @@ test('customer snapshots only expose that customer booking counters and detect u
         ->assertJsonPath('counts.completed', 1);
 });
 
+test('customer active booking tracking returns the assigned technician location and detects movement', function () {
+    $customer = User::factory()->create(['role' => 'customer']);
+    $otherCustomer = User::factory()->create(['role' => 'customer']);
+    $technician = User::factory()->create([
+        'role' => 'technician',
+        'avatar_path' => 'avatars/technician.png',
+        'latitude' => 14.6000000,
+        'longitude' => 120.9850000,
+        'last_seen_at' => now()->subMinute(),
+    ]);
+    $otherTechnician = User::factory()->create(['role' => 'technician', 'name' => 'Other Technician']);
+    $createdAt = now()->subMinute();
+
+    foreach ([[$customer->id, $technician->id, 'TECH-OWNED'], [$otherCustomer->id, $otherTechnician->id, 'TECH-OTHER']] as [$userId, $technicianId, $reference]) {
+        DB::table('bookings')->insert([
+            'user_id' => $userId,
+            'assigned_technician_id' => $technicianId,
+            'reference' => $reference,
+            'customer_name' => 'Realtime Customer',
+            'customer_phone' => '09170000000',
+            'service_type' => 'aircon',
+            'booking_type' => 'quick',
+            'status' => 'en_route',
+            'address' => 'Realtime address',
+            'latitude' => 14.5995000,
+            'longitude' => 120.9842000,
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
+        ]);
+    }
+
+    $response = $this->actingAs($customer)->get(route('realtime.snapshot', ['scope' => 'customer-active-booking']));
+
+    $response->assertOk()
+        ->assertJsonStructure(['scope', 'version', 'changed', 'tracking'])
+        ->assertJsonPath('tracking.reference', 'TECH-OWNED')
+        ->assertJsonPath('tracking.status', 'en_route')
+        ->assertJsonPath('tracking.customer.latitude', 14.5995)
+        ->assertJsonPath('tracking.technician.name', $technician->name)
+        ->assertJsonPath('tracking.technician.avatar', $technician->avatarUrl())
+        ->assertJsonPath('tracking.technician.initials', $technician->initials())
+        ->assertJsonPath('tracking.technician.latitude', 14.6)
+        ->assertJsonMissing(['name' => 'Other Technician'])
+        ->assertJsonMissing(['reference' => 'TECH-OTHER']);
+
+    $version = $response->json('version');
+    DB::table('users')->where('id', $technician->id)->update([
+        'latitude' => 14.6100000,
+        'longitude' => 120.9950000,
+        'last_seen_at' => now()->addMinute(),
+        'updated_at' => now()->addMinute(),
+    ]);
+
+    $this->actingAs($customer)
+        ->get(route('realtime.snapshot', ['scope' => 'customer-active-booking', 'since' => $version]))
+        ->assertOk()
+        ->assertJsonPath('changed', true)
+        ->assertJsonPath('tracking.technician.latitude', 14.61)
+        ->assertJsonPath('tracking.technician.longitude', 120.995);
+});
+
 test('polling tiers are present only on live or medium-urgency pages', function () {
     $admin = User::factory()->create(['role' => 'superadmin']);
     $technician = User::factory()->create(['role' => 'technician']);
@@ -92,6 +153,18 @@ test('polling tiers are present only on live or medium-urgency pages', function 
         ->assertOk()
         ->assertSee('data-realtime-scope="admin-dispatch-monitor"', false)
         ->assertSee('data-realtime-interval="5000"', false);
+
+    $this->actingAs($technician)
+        ->get(route('technician.module', ['module' => 'job-requests']))
+        ->assertOk()
+        ->assertSee('data-realtime-scope="technician-job-requests"', false)
+        ->assertSee('data-realtime-interval="5000"', false);
+
+    $this->actingAs($customer)
+        ->get(route('customer.module'))
+        ->assertOk()
+        ->assertSee('data-realtime-scope="customer-overview"', false)
+        ->assertSee('data-realtime-interval="1000"', false);
 
     $this->actingAs($admin)
         ->get(route('admin.module', ['module' => 'reports-analytics']))

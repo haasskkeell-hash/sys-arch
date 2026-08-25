@@ -67,7 +67,9 @@ class GoogleAuthController extends Controller
 
         try {
             $tokenResponse = Http::asForm()
+                ->connectTimeout(3)
                 ->timeout(10)
+                ->retry(2, 200, throw: false)
                 ->post('https://oauth2.googleapis.com/token', [
                     'code' => $request->string('code')->toString(),
                     'client_id' => config('services.google.client_id'),
@@ -85,7 +87,9 @@ class GoogleAuthController extends Controller
             }
 
             $profileResponse = Http::withToken($accessToken)
+                ->connectTimeout(3)
                 ->timeout(10)
+                ->retry(2, 200, throw: false)
                 ->get('https://openidconnect.googleapis.com/v1/userinfo');
 
             $profileResponse->throw();

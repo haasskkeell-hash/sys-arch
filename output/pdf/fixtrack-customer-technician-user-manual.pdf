@@ -1,0 +1,821 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R 22 0 R 24 0 R 26 0 R 28 0 R 30 0 R] /Count 12 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>
+endobj
+7 0 obj
+<< /Length 1328 >>
+stream
+q 0.050 0.080 0.160 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 830.00 595.00 12.00 re f Q
+q 0.250 0.750 0.920 rg 0.00 0.00 595.00 14.00 re f Q
+q 0.080 0.450 0.910 rg 48.00 680.00 78.00 78.00 re f Q
+BT /F2 53.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 70.00 689.00 Tm (F) Tj ET
+BT /F2 9.00 Tf 0.250 0.750 0.920 rg 1 0 0 1 48.00 636.00 Tm (FIXTRACK) Tj ET
+BT /F2 28.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 48.00 589.00 Tm (Customer + Technician) Tj ET
+BT /F2 28.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 48.00 553.00 Tm (Dashboard User Manual) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 48.00 528.00 m 300.00 528.00 l S Q
+BT /F1 12.00 Tf 0.860 0.910 0.980 rg 1 0 0 1 48.00 494.00 Tm (How to use the service workspace,) Tj ET
+BT /F1 12.00 Tf 0.860 0.910 0.980 rg 1 0 0 1 48.00 476.00 Tm (and how to clone and run the Laravel system.) Tj ET
+q 0.190 0.300 0.460 rg 48.00 409.00 500.00 1.00 re f Q
+BT /F1 10.00 Tf 0.700 0.790 0.910 rg 1 0 0 1 48.00 363.00 Tm (For customers, technicians, developers, and maintainers) Tj ET
+BT /F2 8.00 Tf 0.250 0.750 0.920 rg 1 0 0 1 48.00 95.00 Tm (Edition) Tj ET
+BT /F1 12.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 48.00 75.00 Tm (August 2026) Tj ET
+BT /F2 8.00 Tf 0.250 0.750 0.920 rg 1 0 0 1 395.00 95.00 Tm (Platform) Tj ET
+BT /F1 12.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 395.00 75.00 Tm (Laravel + Livewire) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 5819 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 510.00 814.50 Tm (START HERE) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (01 | ORIENTATION) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Start here) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (This guide explains the current FixTrack customer and technician workspaces. It also documents the) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (safe setup sequence after cloning the Laravel repository from GitHub.) Tj ET
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 46.00 599.00 503.00 78.00 re B Q
+q 0.130 0.620 0.330 rg 46.00 599.00 5.00 78.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 658.00 Tm (Live-data rule) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 643.10 Tm (The dashboards are role-scoped. Customers see their own bookings, payments, reviews, queue entries,) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 630.10 Tm (and support tickets. Technicians see available requests plus only their assigned jobs, earnings,) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 617.10 Tm (ratings, and verification profile.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 576.00 Tm (Role routing) Tj ET
+q 0.050 0.080 0.160 rg 46.00 543.00 503.00 25.00 re f Q
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 553.90 Tm (Role) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 125.00 553.90 Tm (Entry URL) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 217.00 553.90 Tm (What the role can see) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 407.00 553.90 Tm (Primary outcome) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 511.00 503.00 32.00 re B Q
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 529.60 Tm (Customer) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 125.00 529.60 Tm (/customer) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 217.00 529.60 Tm (Own service records and account activity) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 529.60 Tm (Request and track home) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 518.60 Tm (services) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 479.00 503.00 32.00 re B Q
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 497.60 Tm (Technician) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 125.00 497.60 Tm (/technician) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 217.00 497.60 Tm (Available requests and own assignments) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 497.60 Tm (Accept, perform, and close) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 486.60 Tm (jobs) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 447.00 503.00 32.00 re B Q
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 465.60 Tm (Admin) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 125.00 465.60 Tm (/admin/dashboard) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 217.00 465.60 Tm (Platform-wide operational records) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 465.60 Tm (Manage dispatch, quality,) Tj ET
+BT /F1 8.40 Tf 0.120 0.150 0.210 rg 1 0 0 1 407.00 454.60 Tm (finance, and access) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 424.00 Tm (The normal browser path) Tj ET
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 372.00 118.25 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 52.00 391.80 Tm (/login) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 166.25 394.00 m 172.25 394.00 l S Q
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 174.25 372.00 118.25 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 180.25 391.80 Tm (Verified account) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 294.50 394.00 m 300.50 394.00 l S Q
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 302.50 372.00 118.25 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 308.50 391.80 Tm (/dashboard) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 422.75 394.00 m 428.75 394.00 l S Q
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 430.75 372.00 118.25 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 436.75 391.80 Tm (Role workspace) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 349.50 Tm (After a successful login, /dashboard routes the user by role. Public registration creates customer or) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 335.50 Tm (technician accounts. Admin accounts are provisioned separately and are not offered as a public) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 321.50 Tm (registration option.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 260.00 503.00 51.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 260.00 4.00 51.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 295.20 Tm (Customer: http://127.0.0.1:8000/customer) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 285.20 Tm (Technician: http://127.0.0.1:8000/technician) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 275.20 Tm (Admin: http://127.0.0.1:8000/admin/dashboard) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 2) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 5882 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 478.80 814.50 Tm (CUSTOMER WORKSPACE) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (02 | CUSTOMER DASHBOARD) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Customer workspace) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (The Customer dashboard is the service requester's home base. It combines current work, booking) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (history, service payments, queue status, feedback, support, and account settings.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 666.00 Tm (Navigation map) Tj ET
+q 0.050 0.080 0.160 rg 46.00 633.00 503.00 25.00 re f Q
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 643.90 Tm (Area) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 141.00 643.90 Tm (Modules) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 319.00 643.90 Tm (Use it for) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 590.00 503.00 43.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 619.80 Tm (Home) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 619.80 Tm (Dashboard) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 619.80 Tm (See ongoing bookings, completed jobs, total) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 608.80 Tm (bookings, open support, next visit, and recent) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 597.80 Tm (bookings.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 558.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 576.80 Tm (Bookings) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 576.80 Tm (Book a Service; My Bookings; Walk-in) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 565.80 Tm (Queue) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 576.80 Tm (Create a request, filter history, open details, or) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 565.80 Tm (join a live queue.) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 526.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 544.80 Tm (Service journey) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 544.80 Tm (Quotations; Payments) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 544.80 Tm (Review assessment status and payment records tied to) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 533.80 Tm (your bookings.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 483.00 503.00 43.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 512.80 Tm (Account) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 512.80 Tm (Addresses; Ratings & Reviews;) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 501.80 Tm (Notifications; Support & Help;) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 141.00 490.80 Tm (Settings) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 512.80 Tm (Manage locations, feedback, updates, support) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 319.00 501.80 Tm (requests, profile, security, and appearance.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 460.00 Tm (Dashboard cards are live records) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 443.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 443.70 Tm (Ongoing booking counts your own pending, matching, assigned, en route, and in-progress bookings.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 428.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 428.20 Tm (Completed jobs counts your own completed bookings.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 412.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 412.70 Tm (Total bookings counts all bookings owned by the authenticated customer.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 397.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 397.20 Tm (Open support counts your own open and in-progress support tickets.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 325.00 503.00 65.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 325.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 371.00 Tm (Empty states are meaningful) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 356.10 Tm (A message such as 'No active service' or 'Your booking history will appear here' means the scoped) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 343.10 Tm (database query found no matching record. It is not a demo fallback.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 302.00 Tm (Refresh behavior) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 285.50 Tm (Dashboard, My Bookings, Walk-in Queue, and Payments use lightweight live-update checks. Other) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 271.50 Tm (customer sections refresh on navigation, manual refresh, or after an action such as booking,) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 257.50 Tm (reviewing, or sending support.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 3) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 5703 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 482.70 814.50 Tm (CUSTOMER WORKFLOW) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (03 | CUSTOMER WORKFLOW) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Book and track a service) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (Use this flow when you need a home service. The form validates the request before it is written to) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (the bookings table.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 653.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 663.00 Tm (1) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 667.00 Tm (Open Book a Service) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 654.20 Tm (Choose Quick booking to start matching now, or Schedule a visit to select a future date and) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 642.20 Tm (time.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 597.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 607.00 Tm (2) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 611.00 Tm (Enter service details) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 598.20 Tm (Choose an active service type, confirm your name, mobile number, service address, and optional) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 586.20 Tm (description. Scheduled bookings require a future date and time.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 541.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 551.00 Tm (3) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 555.00 Tm (Submit the request) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 542.20 Tm (FixTrack creates a real booking reference, links it to your customer account, and places it in) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 530.20 Tm (matching or pending status according to platform settings.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 485.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 495.00 Tm (4) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 499.00 Tm (Track My Bookings) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 486.20 Tm (Use search and status filters, then open a row to see the address, schedule, booking type,) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 474.20 Tm (description, and current status.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 442.00 Tm (Typical service status flow) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 390.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 52.00 409.80 Tm (Pending / matching) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 140.60 412.00 m 146.60 412.00 l S Q
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 148.60 390.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 154.60 409.80 Tm (Assigned) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 243.20 412.00 m 249.20 412.00 l S Q
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 251.20 390.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 257.20 409.80 Tm (En route) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 345.80 412.00 m 351.80 412.00 l S Q
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 353.80 390.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 359.80 409.80 Tm (In progress) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 448.40 412.00 m 454.40 412.00 l S Q
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 456.40 390.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 462.40 409.80 Tm (Completed) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 367.50 Tm (A booking may also be cancelled. The visible status always comes from the booking record, so the) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 353.50 Tm (customer view and technician view stay aligned.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 332.00 Tm (Walk-in Queue) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 315.50 Tm (Open Walk-in Queue, choose a service, enter your phone number, add optional notes, and submit. Your) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 301.50 Tm (queue entry receives a queue number and is scoped to your account. The page reports waiting, being) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 287.50 Tm (served, and completed counts from walk_in_entries.) Tj ET
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 46.00 212.00 503.00 65.00 re B Q
+q 0.880 0.550 0.080 rg 46.00 212.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 258.00 Tm (Before you submit) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 243.10 Tm (Check the service address and phone number. These values are stored with the booking or queue entry) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 230.10 Tm (and are used by dispatch and the assigned technician.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 4) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 4402 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 482.70 814.50 Tm (CUSTOMER PAYMENTS) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (04 | CUSTOMER OPERATIONS) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Payments, reviews, and support) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 699.00 Tm (Payments) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 682.50 Tm (Payments are connected to your bookings. The page shows Total paid, Paid records, and Pending) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 668.50 Tm (records. Paid totals include completed bookings with payment status paid. Open a row to confirm the) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 654.50 Tm (booking reference, amount, method, paid date, and status.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 633.00 Tm (Ratings & Reviews) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 616.50 Tm (Completed bookings that do not yet have a review appear in the Leave feedback area. Choose a rating) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 602.50 Tm (from 1 to 5, add an optional comment, and submit once. Your average rating and submitted review count) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 588.50 Tm (are calculated from your own review records.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 567.00 Tm (Quotations) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 550.50 Tm (The current UI reserves this area for technician assessments and quotations. This version does not) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 536.50 Tm (yet persist quotation records, so the page is informational until that data model is introduced.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 515.00 Tm (Notifications) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 498.50 Tm (Notifications combine your recent booking updates and support ticket updates. They are derived from) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 484.50 Tm (the same relational records shown in the dashboard and support pages.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 463.00 Tm (Support & Help) Tj ET
+q 0.080 0.450 0.910 rg 46.00 431.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 441.00 Tm (1) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 445.00 Tm (Create a request) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 432.20 Tm (Enter a subject, choose Booking, Payment, Technical, Account, or Other, set Low, Normal, or) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 420.20 Tm (High priority, and write the message.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 375.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 385.00 Tm (2) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 389.00 Tm (Track the ticket) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 376.20 Tm (Your support table shows the reference, subject, category, priority, updated time, and current) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 364.20 Tm (status.) Tj ET
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 278.00 503.00 65.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 278.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 324.00 Tm (Account settings) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 309.10 Tm (Settings links to Profile, Security, and Appearance. Keep your name and email accurate because) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 296.10 Tm (relational records use the authenticated account identity.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 5) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 5202 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 471.00 814.50 Tm (TECHNICIAN WORKSPACE) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (05 | TECHNICIAN DASHBOARD) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Technician workspace) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (The Technician dashboard is an operational workspace. It is designed around availability, incoming) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (requests, assigned work, route progress, earnings, quality, verification, and support.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 666.00 Tm (Navigation map) Tj ET
+q 0.050 0.080 0.160 rg 46.00 633.00 503.00 25.00 re f Q
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 643.90 Tm (Area) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 153.00 643.90 Tm (Modules) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 343.00 643.90 Tm (Use it for) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 601.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 619.80 Tm (Workspace) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 619.80 Tm (Dashboard; Job Requests; My Jobs;) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 608.80 Tm (Schedule) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 619.80 Tm (See the next action, review available work,) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 608.80 Tm (manage assigned jobs, and filter appointments.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 569.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 587.80 Tm (Operations) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 587.80 Tm (Dispatch & Routes) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 587.80 Tm (Follow active route assignments, current job,) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 576.80 Tm (location signal, and availability.) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 537.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 555.80 Tm (Finance and quality) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 555.80 Tm (Earnings; Ratings & Reviews) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 555.80 Tm (Review completed-job payments, totals, payout) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 544.80 Tm (status, rating average, and feedback.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 505.00 503.00 32.00 re B Q
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 523.80 Tm (Account) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 523.80 Tm (Verification & Profile; Notifications;) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 153.00 512.80 Tm (Support & Help) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 523.80 Tm (Monitor approval status, service categories,) Tj ET
+BT /F1 8.20 Tf 0.120 0.150 0.210 rg 1 0 0 1 343.00 512.80 Tm (updates, and support tickets.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 482.00 Tm (Dashboard cards) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 465.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 465.70 Tm (Today's jobs counts your assigned bookings scheduled today or created today.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 450.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 450.20 Tm (Active jobs counts your assigned bookings in assigned, en route, or in-progress status.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 434.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 434.70 Tm (Completed jobs counts your assigned completed bookings.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 419.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 419.20 Tm (Average rating is calculated from your published reviews.) Tj ET
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 46.00 347.00 503.00 65.00 re B Q
+q 0.130 0.620 0.330 rg 46.00 347.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 393.00 Tm (Availability matters) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 378.10 Tm (Use Go online when you are ready for requests. Accepting a request also requires an active) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 365.10 Tm (technician account and approved verification.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 6) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 17 0 R >>
+endobj
+19 0 obj
+<< /Length 5720 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 474.90 814.50 Tm (TECHNICIAN WORKFLOW) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (06 | TECHNICIAN WORKFLOW) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (From request to completed job) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (This is the core technician flow. Each action updates the booking record and is visible to the) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (appropriate customer and admin views.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 653.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 663.00 Tm (1) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 667.00 Tm (Go online) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 654.20 Tm (From Dashboard or Job Requests, switch availability to available. Go offline when you are not) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 642.20 Tm (accepting new work.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 597.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 607.00 Tm (2) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 611.00 Tm (Review Job Requests) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 598.20 Tm (Available requests are unassigned bookings in pending or matching status. Search by reference,) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 586.20 Tm (customer, service, or address.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 541.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 551.00 Tm (3) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 555.00 Tm (Accept or decline) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 542.20 Tm (Accept moves the booking to assigned and adds it to My Jobs. Decline removes it from your) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 530.20 Tm (request queue without assigning it to you.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 485.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 495.00 Tm (4) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 499.00 Tm (Start the route) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 486.20 Tm (For an assigned job, choose Start route. The booking moves to en_route and appears in Dispatch) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 474.20 Tm (& Routes.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 429.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 439.00 Tm (5) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 443.00 Tm (Start the repair) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 430.20 Tm (Choose Start repair after the route begins. The booking moves to in_progress.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 385.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 395.00 Tm (6) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 399.00 Tm (Complete the job) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 386.20 Tm (Choose Complete job after the repair is done. The booking moves to completed and a pending) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 374.20 Tm (payment record is created when payments are available.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 342.00 Tm (Job status flow) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 290.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 52.00 309.80 Tm (Pending / matching) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 140.60 312.00 m 146.60 312.00 l S Q
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 148.60 290.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 154.60 309.80 Tm (Assigned) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 243.20 312.00 m 249.20 312.00 l S Q
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 251.20 290.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 257.20 309.80 Tm (En route) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 345.80 312.00 m 351.80 312.00 l S Q
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 353.80 290.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 359.80 309.80 Tm (In progress) Tj ET
+q 0.080 0.450 0.910 RG 1.30 w 448.40 312.00 m 454.40 312.00 l S Q
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 456.40 290.00 92.60 44.00 re B Q
+BT /F2 8.20 Tf 0.050 0.080 0.160 rg 1 0 0 1 462.40 309.80 Tm (Completed) Tj ET
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 46.00 211.00 503.00 65.00 re B Q
+q 0.880 0.550 0.080 rg 46.00 211.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 257.00 Tm (Confirmation is intentional) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 242.10 Tm (Every accept, decline, route, repair, and completion action uses a confirmation step. If an action) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 229.10 Tm (fails, the dashboard reports the server-side error instead of silently changing the row.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 7) Tj ET
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 19 0 R >>
+endobj
+21 0 obj
+<< /Length 4484 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 467.10 814.50 Tm (TECHNICIAN OPERATIONS) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (07 | TECHNICIAN OPERATIONS) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Schedule, routes, earnings, and quality) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 699.00 Tm (Schedule) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 682.50 Tm (Use Upcoming, Today, Completed, or All appointments to narrow your assigned bookings. Search by) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 668.50 Tm (reference, customer, service, or address. The summary cards show today, upcoming, in-progress, and) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 654.50 Tm (completed counts.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 633.00 Tm (Dispatch & Routes) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 616.50 Tm (The route view shows active assigned jobs, the current job, location signal, latitude and longitude) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 602.50 Tm (when available, last seen time, and your current availability. Keep location sharing enabled while) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 588.50 Tm (available if dispatch needs live coordination.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 567.00 Tm (Earnings) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 550.50 Tm (Earnings are calculated from payment rows for your completed assigned bookings. Total earned and) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 536.50 Tm (Earned today sum paid amounts. Paid jobs and Pending payments count records by payment status.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 515.00 Tm (Ratings & Reviews) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 498.50 Tm (The page shows your published reviews, average rating, and five-star review count. Reviews are linked) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 484.50 Tm (to the technician_id on the review record.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 463.00 Tm (Verification & Profile) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 446.50 Tm (This page reads your technician verification, service categories, years of experience, service area,) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 432.50 Tm (risk level, decision reason, and attached documents. A new technician registration creates a) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 418.50 Tm (submitted verification record; admin approval is required before accepting requests.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 397.00 Tm (Notifications and Support) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 380.50 Tm (Notifications summarize available requests, active assignments, and verification status. Support) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 366.50 Tm (shows tickets where you are the requester or assigned staff member.) Tj ET
+q 0.910 0.960 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 278.00 503.00 78.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 278.00 5.00 78.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 337.00 Tm (Refresh expectations) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 322.10 Tm (Job Requests polls about every 5 seconds. Dashboard, My Jobs, and Dispatch & Routes poll about every) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 309.10 Tm (10 seconds. Earnings and Verification refresh about every 60 seconds. Schedule, ratings,) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 296.10 Tm (notifications, and support refresh on navigation or manual refresh.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 8) Tj ET
+endstream
+endobj
+22 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 21 0 R >>
+endobj
+23 0 obj
+<< /Length 5878 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 498.30 814.50 Tm (CLONE AND RUN) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (08 | DEVELOPER SETUP) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Clone the Laravel system) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (GitHub stores the application source, migrations, configuration templates, and frontend source. It) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (does not store local secrets, installed dependencies, runtime caches, compiled assets, or database) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 673.50 Tm (records.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 652.00 Tm (Prerequisites) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 635.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 635.70 Tm (Git) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 620.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 620.20 Tm (PHP 8.3 or newer) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 604.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 604.70 Tm (Composer) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 589.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 589.20 Tm (Node.js and npm) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 573.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 573.70 Tm (MySQL or another configured Laravel database connection) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 558.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 558.20 Tm (A terminal with permission to write storage and bootstrap/cache) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 540.00 Tm (Clone and enter the project) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 492.00 503.00 40.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 492.00 4.00 40.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 516.20 Tm (git clone <YOUR_GITHUB_REPOSITORY_URL> fixtrack-final) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 506.20 Tm (cd fixtrack-final) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 469.00 Tm (Why files appear to be missing after cloning) Tj ET
+q 0.050 0.080 0.160 rg 46.00 436.00 503.00 25.00 re f Q
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 446.90 Tm (Not in GitHub) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 165.00 446.90 Tm (Why) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 355.00 446.90 Tm (Restore it with) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 404.00 503.00 32.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 423.20 Tm (.env) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 423.20 Tm (Local secrets and database settings are) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 412.20 Tm (ignored.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 423.20 Tm (cp .env.example .env, then edit it.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 372.00 503.00 32.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 391.20 Tm (vendor/) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 391.20 Tm (Composer dependencies are generated) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 380.20 Tm (locally.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 391.20 Tm (composer install) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 347.00 503.00 25.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 359.20 Tm (node_modules/) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 359.20 Tm (npm dependencies are generated locally.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 359.20 Tm (npm install) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 322.00 503.00 25.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 334.20 Tm (public/build/) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 334.20 Tm (Vite output is generated, not source.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 334.20 Tm (npm run build or npm run dev) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 290.00 503.00 32.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 309.20 Tm (storage runtime files) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 309.20 Tm (Logs, cache, sessions, and uploads are) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 298.20 Tm (environment data.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 309.20 Tm (Create writable folders and run storage:link.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 258.00 503.00 32.00 re B Q
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 277.20 Tm (Database rows) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 165.00 277.20 Tm (Git does not carry MySQL data.) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 277.20 Tm (Run migrations and restore a database backup) Tj ET
+BT /F1 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 355.00 266.20 Tm (if needed.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 526.54 20.80 Tm (Page 9) Tj ET
+endstream
+endobj
+24 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 23 0 R >>
+endobj
+25 0 obj
+<< /Length 4197 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 506.10 814.50 Tm (ENVIRONMENT) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (09 | DEVELOPER SETUP) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Configure the environment) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 699.00 Tm (Create the local environment file) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 640.00 503.00 51.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 640.00 4.00 51.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 675.20 Tm (cp .env.example .env) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 665.20 Tm (composer install) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 655.20 Tm (php artisan key:generate) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 619.50 Tm (Keep .env private. Do not commit it or paste database passwords, APP_KEY values, mail credentials, or) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 605.50 Tm (API secrets into GitHub.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 584.00 Tm (Configure MySQL) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 481.00 503.00 95.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 481.00 4.00 95.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 560.20 Tm (CREATE DATABASE fixtrack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 550.20 Tm (DB_CONNECTION=mysql) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 540.20 Tm (DB_HOST=127.0.0.1) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 530.20 Tm (DB_PORT=3306) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 520.20 Tm (DB_DATABASE=fixtrack) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 510.20 Tm (DB_USERNAME=your_mysql_user) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 500.20 Tm (DB_PASSWORD=your_mysql_password) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 460.50 Tm (The SQL statement is run in MySQL, not pasted into .env. Put the DB_* values in .env, then run) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 446.50 Tm (migrations from the project directory.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 425.00 Tm (Install schema and runtime links) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 355.00 503.00 62.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 355.00 4.00 62.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 401.20 Tm (php artisan migrate --force) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 391.20 Tm (php artisan storage:link) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 381.20 Tm (npm install) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 371.20 Tm (npm run build) Tj ET
+q 1.000 0.970 0.880 rg 0.840 0.870 0.910 RG 1.00 w 46.00 265.00 503.00 78.00 re B Q
+q 0.880 0.550 0.080 rg 46.00 265.00 5.00 78.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 324.00 Tm (Existing database warning) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 309.10 Tm (Use php artisan migrate for an existing environment. Do not use migrate:fresh or db:wipe unless you) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 296.10 Tm (intentionally want to delete every table and record. The legacy demo cleanup migration runs as part) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 283.10 Tm (of the normal migration sequence.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 522.79 20.80 Tm (Page 10) Tj ET
+endstream
+endobj
+26 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 25 0 R >>
+endobj
+27 0 obj
+<< /Length 5423 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 513.90 814.50 Tm (FIRST RUN) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (10 | DEVELOPER SETUP) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (First-run checklist) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 701.50 Tm (This repository intentionally does not seed operational demo bookings, payments, reviews, or queue) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 687.50 Tm (records. A fresh database therefore needs real setup data before customers and technicians can use) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 673.50 Tm (the full workflow.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 639.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 649.00 Tm (1) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 653.00 Tm (Provision the first admin) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 640.20 Tm (Public registration accepts customer and technician roles only. Create a controlled) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 628.20 Tm (superadmin/admin account through your deployment provisioning process, then log in at) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 616.20 Tm (/admin/dashboard.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 571.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 581.00 Tm (2) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 585.00 Tm (Initialize platform settings) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 572.20 Tm (Open Platform Settings and initialize the live controls. These settings govern booking) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 560.20 Tm (matching, queue availability, dispatch limits, notifications, finance, and quality policies.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 515.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 525.00 Tm (3) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 529.00 Tm (Create service catalog entries) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 516.20 Tm (Open Service Catalog and add active service offerings with a code, name, category, base price,) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 504.20 Tm (and description. Customers can only choose active catalog services.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 459.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 469.00 Tm (4) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 473.00 Tm (Create real user accounts) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 460.20 Tm (Use /register to create a customer or technician account. Technician registration collects) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 448.20 Tm (phone, category, service area, and years of experience, then starts verification in submitted) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 436.20 Tm (status.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 391.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 401.00 Tm (5) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 405.00 Tm (Approve technicians) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 392.20 Tm (An admin reviews Technician Verification. A technician needs approved verification and an) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 380.20 Tm (active account before accepting job requests.) Tj ET
+q 0.080 0.450 0.910 rg 46.00 335.00 24.00 24.00 re f Q
+BT /F2 10.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 54.00 345.00 Tm (6) Tj ET
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 82.00 349.00 Tm (Run a real end-to-end test) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 336.20 Tm (Customer creates a booking, technician accepts it, moves it through en_route and in_progress,) Tj ET
+BT /F1 8.80 Tf 0.360 0.400 0.480 rg 1 0 0 1 82.00 324.20 Tm (completes it, and customer confirms payment/review behavior.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 292.00 Tm (Run the local stack) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 244.00 503.00 40.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 244.00 4.00 40.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 268.20 Tm (composer run dev) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 258.20 Tm (# starts Laravel server, queue listener, logs, and Vite) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 223.50 Tm (If you prefer separate terminals, run php artisan serve in one terminal and npm run dev in another.) Tj ET
+BT /F1 9.50 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 209.50 Tm (The default web URL is usually http://127.0.0.1:8000.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 522.79 20.80 Tm (Page 11) Tj ET
+endstream
+endobj
+28 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 27 0 R >>
+endobj
+29 0 obj
+<< /Length 7332 >>
+stream
+q 1.000 1.000 1.000 rg 0.00 0.00 595.00 842.00 re f Q
+q 0.050 0.080 0.160 rg 0.00 788.00 595.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 0.00 788.00 5.00 54.00 re f Q
+q 0.080 0.450 0.910 rg 46.00 804.00 22.00 22.00 re f Q
+BT /F2 14.00 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 811.00 Tm (F) Tj ET
+BT /F2 8.30 Tf 1.000 1.000 1.000 rg 1 0 0 1 78.00 814.70 Tm (FIXTRACK) Tj ET
+BT /F2 7.50 Tf 0.720 0.820 0.950 rg 1 0 0 1 459.30 814.50 Tm (VERIFY AND TROUBLESHOOT) Tj ET
+q 0.250 0.750 0.920 RG 1.20 w 46.00 788.00 m 549.00 788.00 l S Q
+BT /F2 7.60 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 759.40 Tm (11 | OPERATIONS) Tj ET
+BT /F2 20.00 Tf 0.050 0.080 0.160 rg 1 0 0 1 46.00 734.00 Tm (Verify and troubleshoot) Tj ET
+q 0.250 0.750 0.920 RG 2.00 w 46.00 726.00 m 549.00 726.00 l S Q
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 699.00 Tm (Quick health checks) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 618.00 503.00 73.00 re B Q
+q 0.080 0.450 0.910 rg 46.00 618.00 4.00 73.00 re f Q
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 675.20 Tm (php artisan about) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 665.20 Tm (php artisan route:list --path=customer) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 655.20 Tm (php artisan route:list --path=technician) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 645.20 Tm (php artisan migrate:status) Tj ET
+BT /F3 7.80 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 635.20 Tm (curl http://127.0.0.1:8000/up) Tj ET
+q 0.050 0.080 0.160 rg 46.00 581.00 503.00 25.00 re f Q
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 53.00 591.90 Tm (Symptom) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 195.00 591.90 Tm (Likely cause) Tj ET
+BT /F2 8.10 Tf 1.000 1.000 1.000 rg 1 0 0 1 375.00 591.90 Tm (First check) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 549.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 568.10 Tm (APP_KEY missing) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 568.10 Tm (The cloned project has no .env.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 568.10 Tm (Copy .env.example, then run php artisan) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 557.10 Tm (key:generate.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 517.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 536.10 Tm (SQLSTATE connection error) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 536.10 Tm (MySQL is stopped or DB_* values are) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 525.10 Tm (wrong.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 536.10 Tm (Check MySQL, database name, username,) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 525.10 Tm (password, host, and port.) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 485.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 504.10 Tm (Vite manifest error) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 504.10 Tm (Frontend assets were not built.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 504.10 Tm (Run npm install and npm run build, or) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 493.10 Tm (keep npm run dev running.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 453.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 472.10 Tm (Permission denied in storage) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 472.10 Tm (Runtime folders are not writable.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 472.10 Tm (Check storage and bootstrap/cache) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 461.10 Tm (permissions; run storage:link.) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 421.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 440.10 Tm (No services in Book a Service) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 440.10 Tm (Service Catalog is empty or inactive.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 440.10 Tm (Sign in as admin and create active) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 429.10 Tm (service catalog entries.) Tj ET
+q 0.950 0.970 0.990 rg 0.840 0.870 0.910 RG 1.00 w 46.00 389.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 408.10 Tm (Technician cannot accept) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 408.10 Tm (Verification is not approved or account) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 397.10 Tm (is inactive.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 408.10 Tm (Review Verification & Profile and admin) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 397.10 Tm (Technician Verification.) Tj ET
+q 1.000 1.000 1.000 rg 0.840 0.870 0.910 RG 1.00 w 46.00 357.00 503.00 32.00 re B Q
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 53.00 376.10 Tm (No rows in a table) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 376.10 Tm (There are no matching live records for) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 195.00 365.10 Tm (this role.) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 376.10 Tm (Confirm the authenticated account and) Tj ET
+BT /F1 7.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 375.00 365.10 Tm (create a real workflow record.) Tj ET
+BT /F2 12.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 46.00 334.00 Tm (Before committing to GitHub) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 317.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 317.70 Tm (Never commit .env, database passwords, APP_KEY, uploaded documents, logs, or local database) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 304.20 Tm (exports.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 288.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 288.70 Tm (Keep composer.lock and package-lock.json committed so installs are reproducible.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 273.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 273.20 Tm (Run vendor/bin/pint --dirty --format agent for changed PHP files and php artisan test --compact.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 257.70 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 257.70 Tm (Run npm run build when frontend source changes.) Tj ET
+BT /F2 9.30 Tf 0.080 0.450 0.910 rg 1 0 0 1 46.00 242.20 Tm (-) Tj ET
+BT /F1 9.30 Tf 0.120 0.150 0.210 rg 1 0 0 1 60.00 242.20 Tm (Back up MySQL data separately from the Git repository.) Tj ET
+q 0.910 0.980 0.940 rg 0.840 0.870 0.910 RG 1.00 w 46.00 170.00 503.00 65.00 re B Q
+q 0.130 0.620 0.330 rg 46.00 170.00 5.00 65.00 re f Q
+BT /F2 10.00 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 216.00 Tm (Deployment principle) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 201.10 Tm (GitHub restores code. Composer, npm, .env, migrations, storage, and database backup restore the) Tj ET
+BT /F1 8.90 Tf 0.120 0.150 0.210 rg 1 0 0 1 62.00 188.10 Tm (runnable system.) Tj ET
+q 0.840 0.870 0.910 RG 0.70 w 46.00 36.00 m 549.00 36.00 l S Q
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 46.00 20.80 Tm (FixTrack | User Manual) Tj ET
+BT /F1 7.20 Tf 0.360 0.400 0.480 rg 1 0 0 1 522.79 20.80 Tm (Page 12) Tj ET
+endstream
+endobj
+30 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents 29 0 R >>
+endobj
+xref
+0 31
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000199 00000 n 
+0000000269 00000 n 
+0000000344 00000 n 
+0000000412 00000 n 
+0000000485 00000 n 
+0000001865 00000 n 
+0000002021 00000 n 
+0000007892 00000 n 
+0000008049 00000 n 
+0000013984 00000 n 
+0000014142 00000 n 
+0000019898 00000 n 
+0000020056 00000 n 
+0000024511 00000 n 
+0000024669 00000 n 
+0000029924 00000 n 
+0000030082 00000 n 
+0000035855 00000 n 
+0000036013 00000 n 
+0000040550 00000 n 
+0000040708 00000 n 
+0000046639 00000 n 
+0000046797 00000 n 
+0000051047 00000 n 
+0000051205 00000 n 
+0000056681 00000 n 
+0000056839 00000 n 
+0000064224 00000 n 
+trailer
+<< /Size 31 /Root 1 0 R >>
+startxref
+64382
+%%EOF

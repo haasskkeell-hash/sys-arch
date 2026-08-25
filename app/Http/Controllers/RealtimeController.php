@@ -33,6 +33,7 @@ class RealtimeController extends Controller
         'technician-verification-profile',
         'customer-overview',
         'customer-my-bookings',
+        'customer-active-booking',
         'customer-walk-in-queue',
         'customer-payments',
     ];
@@ -56,7 +57,11 @@ class RealtimeController extends Controller
         ];
 
         if ($changed) {
-            $payload['counts'] = $this->countsFor($scope, $user, $version);
+            if ($scope === 'customer-active-booking') {
+                $payload['tracking'] = $this->customerActiveBookingTracking($user);
+            } else {
+                $payload['counts'] = $this->countsFor($scope, $user, $version);
+            }
         }
 
         return response()->json($payload);
@@ -64,6 +69,8 @@ class RealtimeController extends Controller
 
     private function authorizeScope(string $scope, User $user): void
     {
+        abort_unless($user->hasActiveAccount(), 403);
+
         if (str_starts_with($scope, 'admin-')) {
             abort_unless($user->isAdmin(), 403);
 
@@ -113,6 +120,7 @@ class RealtimeController extends Controller
             'technician-earnings' => $this->latestTechnicianPaymentUpdatedAt($user),
             'technician-verification-profile' => $this->latestTechnicianVerificationUpdatedAt($user),
             'customer-overview', 'customer-my-bookings' => $this->latestUpdatedAtForCustomerBookings($user),
+            'customer-active-booking' => $this->latestActiveBookingTrackingUpdatedAt($user),
             'customer-walk-in-queue' => $this->latestUpdatedAtForCustomerQueue($user),
             'customer-payments' => $this->latestCustomerPaymentUpdatedAt($user),
             default => abort(404),
@@ -427,6 +435,78 @@ class RealtimeController extends Controller
         }
 
         return $this->formatTimestamp(Booking::query()->where('user_id', $customer->id)->max('updated_at'));
+    }
+
+    private function latestActiveBookingTrackingUpdatedAt(User $customer): string
+    {
+        if (! $this->tableExists('bookings')) {
+            return 'none';
+        }
+
+        $booking = Booking::query()
+            ->select(['id', 'assigned_technician_id', 'updated_at'])
+            ->with('technician:id,updated_at')
+            ->whereBelongsTo($customer, 'customer')
+            ->whereIn('status', ['pending', 'matching', 'assigned', 'en_route', 'in_progress'])
+            ->latest('created_at')
+            ->first();
+
+        return $this->latestVersion([
+            $this->formatTimestamp($booking?->updated_at),
+            $this->formatTimestamp($booking?->technician?->updated_at),
+        ]);
+    }
+
+    /** @return array<string, mixed>|null */
+    private function customerActiveBookingTracking(User $customer): ?array
+    {
+        if (! $this->tableExists('bookings')) {
+            return null;
+        }
+
+        $technicianColumns = ['id', 'name', 'updated_at'];
+        foreach (['avatar_path', 'latitude', 'longitude', 'last_seen_at'] as $column) {
+            if ($this->columnExists('users', $column)) {
+                $technicianColumns[] = $column;
+            }
+        }
+
+        $booking = Booking::query()
+            ->select(['id', 'assigned_technician_id', 'reference', 'service_type', 'status', 'address', 'latitude', 'longitude'])
+            ->with(['technician' => fn ($query) => $query->select($technicianColumns)])
+            ->whereBelongsTo($customer, 'customer')
+            ->whereIn('status', ['pending', 'matching', 'assigned', 'en_route', 'in_progress'])
+            ->latest('created_at')
+            ->first();
+
+        if (! $booking) {
+            return null;
+        }
+
+        $technician = in_array($booking->status, ['assigned', 'en_route', 'in_progress'], true)
+            ? $booking->technician
+            : null;
+
+        return [
+            'booking_id' => $booking->id,
+            'reference' => $booking->reference,
+            'service_type' => $booking->service_type,
+            'status' => $booking->status,
+            'address' => $booking->address,
+            'customer' => [
+                'latitude' => $booking->latitude !== null ? (float) $booking->latitude : null,
+                'longitude' => $booking->longitude !== null ? (float) $booking->longitude : null,
+            ],
+            'technician' => $technician ? [
+                'id' => $technician->id,
+                'name' => $technician->name,
+                'avatar' => $technician->avatarUrl(),
+                'initials' => $technician->initials(),
+                'latitude' => $technician->latitude !== null ? (float) $technician->latitude : null,
+                'longitude' => $technician->longitude !== null ? (float) $technician->longitude : null,
+                'last_seen_at' => $technician->last_seen_at?->toISOString(),
+            ] : null,
+        ];
     }
 
     private function latestUpdatedAtForCustomerQueue(User $customer): string

@@ -328,6 +328,27 @@ test('super admins can update user roles through a module action', function () {
     expect($user->refresh()->role)->toBe('technician');
 });
 
+test('super admin role changes reject staff roles without a workspace', function () {
+    $superAdmin = User::factory()->create(['role' => 'superadmin']);
+    $user = User::factory()->create(['role' => 'customer']);
+
+    $this->actingAs($superAdmin)
+        ->get('/admin/users-roles')
+        ->assertOk()
+        ->assertDontSee('Make dispatcher')
+        ->assertDontSee('Make support staff')
+        ->assertDontSee('Make finance staff');
+
+    foreach (['dispatcher', 'support', 'finance'] as $role) {
+        Livewire::actingAs($superAdmin)
+            ->test(ModulePage::class, ['module' => 'users-roles'])
+            ->call('updateUserRole', $user->id, $role)
+            ->assertHasErrors(['value']);
+    }
+
+    expect($user->refresh()->role)->toBe('customer');
+});
+
 test('super admin actions use a custom confirmation modal instead of native browser dialogs', function () {
     $superAdmin = User::factory()->create(['role' => 'superadmin']);
     $user = User::factory()->create(['role' => 'customer']);
@@ -448,6 +469,68 @@ test('super admin dispatch connects booking assignment to verified technicians a
     expect($technician->refresh()->availability_status)->toBe('available');
 });
 
+test('super admin dispatch rejects a verified technician without the exact capability', function () {
+    $superAdmin = User::factory()->create(['role' => 'superadmin']);
+    $technician = User::factory()->create([
+        'role' => 'technician',
+        'account_status' => 'active',
+        'availability_status' => 'available',
+    ]);
+    DB::table('technician_verifications')->insert([
+        'user_id' => $technician->id,
+        'reviewer_id' => $superAdmin->id,
+        'status' => 'approved',
+        'risk_level' => 'low',
+        'service_categories' => json_encode(['electronics-battery']),
+        'years_experience' => 3,
+        'submitted_at' => now(),
+        'reviewed_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    $bookingId = DB::table('bookings')->insertGetId([
+        'user_id' => $superAdmin->id,
+        'reference' => 'FT-ASSIGN-LCD',
+        'customer_name' => 'Dispatch Customer',
+        'customer_phone' => '09170000000',
+        'service_type' => 'electronics-lcd',
+        'booking_type' => 'quick',
+        'status' => 'matching',
+        'address' => 'Test address',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $this->actingAs($superAdmin);
+
+    expect(fn () => (new ModulePage)->assignBooking($bookingId, $technician->id))
+        ->toThrow(HttpException::class);
+
+    expect(DB::table('bookings')->whereKey($bookingId)->first())
+        ->assigned_technician_id->toBeNull()
+        ->and($technician->refresh()->availability_status)->toBe('available');
+});
+
+test('super admin sees exact technician capability labels', function () {
+    $superAdmin = User::factory()->create(['role' => 'superadmin']);
+    $technician = User::factory()->create(['role' => 'technician']);
+    DB::table('technician_verifications')->insert([
+        'user_id' => $technician->id,
+        'status' => 'submitted',
+        'risk_level' => 'low',
+        'service_categories' => json_encode(['electronics-lcd', 'electronics-battery']),
+        'years_experience' => 3,
+        'submitted_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    Livewire::actingAs($superAdmin)
+        ->test(ModulePage::class, ['module' => 'technician-verification'])
+        ->assertSee('LCD / screen replacement')
+        ->assertSee('Battery replacement');
+});
+
 test('super admin can initialize and update live platform settings', function () {
     $superAdmin = User::factory()->create(['role' => 'superadmin']);
 
@@ -463,7 +546,8 @@ test('super admin can initialize and update live platform settings', function ()
         ->set('settingValue', 'false')
         ->call('saveSetting');
 
-    expect(DB::table('platform_settings')->where('key', 'booking_auto_match')->value('value'))->toBe('false');
+    expect(DB::table('platform_settings')->where('key', 'booking_auto_match')->value('value'))->toBe('false')
+        ->and(DB::table('platform_settings')->where('key', 'admin_alert_email')->value('value'))->toBe($superAdmin->email);
 });
 
 test('super admin verification decisions preserve a required reason', function () {
@@ -553,6 +637,28 @@ test('super admins can advance a walk-in entry and update its counter', function
 
     expect(DB::table('walk_in_entries')->where('id', $entryId)->value('status'))->toBe('serving')
         ->and(DB::table('service_counters')->where('id', $counterId)->value('status'))->toBe('busy');
+});
+
+test('super admins cannot reopen a completed walk-in entry', function () {
+    $superAdmin = User::factory()->create(['role' => 'superadmin']);
+    $entryId = DB::table('walk_in_entries')->insertGetId([
+        'queue_number' => 'W-002',
+        'customer_name' => 'Completed Customer',
+        'customer_phone' => '09170000000',
+        'service_type' => 'aircon',
+        'priority' => 'standard',
+        'status' => 'completed',
+        'checked_in_at' => now()->subHour(),
+        'completed_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    Livewire::actingAs($superAdmin)
+        ->test(ModulePage::class, ['module' => 'walk-in-queue'])
+        ->call('updateWalkInStatus', $entryId, 'serving');
+
+    expect(DB::table('walk_in_entries')->where('id', $entryId)->value('status'))->toBe('completed');
 });
 
 test('regular users cannot run super admin module actions', function () {

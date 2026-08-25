@@ -64,7 +64,11 @@
         ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
+            "@schema:check",
             "@test"
+        ],
+        "schema:check": [
+            "@php artisan schema:check --no-interaction --no-ansi"
         ],
         "types:check": [
             "phpstan analyse"

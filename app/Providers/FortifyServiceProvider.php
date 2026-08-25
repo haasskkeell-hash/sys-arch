@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\ServiceCatalog;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,7 +50,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::verifyEmailView(fn () => view('pages::auth.verify-email'));
         Fortify::twoFactorChallengeView(fn () => view('pages::auth.two-factor-challenge'));
         Fortify::confirmPasswordView(fn () => view('pages::auth.confirm-password'));
-        Fortify::registerView(fn () => view('pages::auth.register'));
+        Fortify::registerView(fn () => view('pages::auth.register', ['serviceCatalog' => ServiceCatalog::activeCatalog()]));
         Fortify::resetPasswordView(fn () => view('pages::auth.reset-password'));
         Fortify::requestPasswordResetLinkView(fn () => view('pages::auth.forgot-password'));
     }
@@ -74,6 +75,12 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(10)->by(
                 ($credentialId ?: $request->session()->getId()).'|'.$request->ip(),
+            );
+        });
+
+        RateLimiter::for('realtime', function (Request $request) {
+            return Limit::perMinute(240)->by(
+                ($request->user()?->getAuthIdentifier() ?? 'guest').'|'.$request->ip(),
             );
         });
     }

@@ -218,6 +218,7 @@ class ModulePage extends Component
             'audit-logs' => ['label' => 'Governance', 'color' => 'zinc'],
             'service-catalog' => ['label' => 'Catalog control', 'color' => 'teal'],
             'platform-settings' => ['label' => 'Live controls', 'color' => 'zinc'],
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -356,30 +357,6 @@ class ModulePage extends Component
                 'operation' => 'updateUserRole',
                 'parameters' => [$targetId ?? $targetRequired(), 'technician'],
             ],
-            'make-dispatcher' => [
-                'title' => 'Make this user a Dispatcher?',
-                'description' => 'This changes the user\'s access role and dispatch permissions.',
-                'label' => 'Make dispatcher',
-                'variant' => 'primary',
-                'operation' => 'updateUserRole',
-                'parameters' => [$targetId ?? $targetRequired(), 'dispatcher'],
-            ],
-            'make-support' => [
-                'title' => 'Make this user Support staff?',
-                'description' => 'This changes the user\'s access role and support permissions.',
-                'label' => 'Make support staff',
-                'variant' => 'primary',
-                'operation' => 'updateUserRole',
-                'parameters' => [$targetId ?? $targetRequired(), 'support'],
-            ],
-            'make-finance' => [
-                'title' => 'Make this user Finance staff?',
-                'description' => 'This changes the user\'s access role and finance permissions.',
-                'label' => 'Make finance staff',
-                'variant' => 'primary',
-                'operation' => 'updateUserRole',
-                'parameters' => [$targetId ?? $targetRequired(), 'finance'],
-            ],
             'make-customer' => [
                 'title' => 'Make this user a Customer?',
                 'description' => 'This removes staff access and returns the account to the customer workspace.',
@@ -471,6 +448,15 @@ class ModulePage extends Component
                 'operation' => 'updateBookingStatus',
                 'parameters' => [$targetId ?? $targetRequired(), 'cancelled', 'Cancelled by Super Admin'],
             ],
+            'mark-no-show' => [
+                'title' => 'Mark this booking as no-show?',
+                'description' => 'Only an overdue scheduled booking can be marked no-show. Record why the visit was missed.',
+                'label' => 'Mark no-show',
+                'variant' => 'danger',
+                'operation' => 'updateBookingStatus',
+                'parameters' => [$targetId ?? $targetRequired(), 'no_show'],
+                'requiresReason' => true,
+            ],
             'mark-payment-paid' => [
                 'title' => 'Mark this payment as paid?',
                 'description' => 'The payment record will be marked as paid.',
@@ -548,18 +534,22 @@ class ModulePage extends Component
     public function updateUserRole(int $userId, string $role): void
     {
         $this->authorizeSuperAdmin();
-        $this->validateValue($role, ['superadmin', 'admin', 'dispatcher', 'support', 'finance', 'technician', 'customer']);
-        $user = User::query()->findOrFail($userId);
+        $this->validateValue($role, ['superadmin', 'admin', 'technician', 'customer']);
 
-        abort_if(
-            $user->role === 'superadmin'
-            && $role !== 'superadmin'
-            && User::query()->where('role', 'superadmin')->count() === 1,
-            422,
-            'The final Super Admin cannot be demoted.',
-        );
+        DB::transaction(function () use ($userId, $role): void {
+            $user = User::query()->lockForUpdate()->findOrFail($userId);
 
-        $user->update(['role' => $role]);
+            abort_if(
+                $user->role === 'superadmin'
+                && $role !== 'superadmin'
+                && User::query()->where('role', 'superadmin')->lockForUpdate()->count() === 1,
+                422,
+                'The final Super Admin cannot be demoted.',
+            );
+
+            $user->update(['role' => $role]);
+        });
+
         $this->recordAudit('user.updated', 'user', $userId, ['role' => $role]);
         $this->flashStatus('User role updated.');
     }
@@ -616,9 +606,9 @@ class ModulePage extends Component
     public function updateBookingStatus(int $bookingId, string $status, string $reason = ''): void
     {
         $this->authorizeSuperAdmin();
-        $this->validateValue($status, ['pending', 'matching', 'assigned', 'en_route', 'in_progress', 'completed', 'cancelled']);
+        $this->validateValue($status, Booking::STATUSES);
         abort_unless($this->tableExists('bookings'), 422, 'Service bookings are not available yet.');
-        abort_if($status === 'cancelled' && trim($reason) === '', 422, 'A cancellation reason is required.');
+        abort_if(in_array($status, ['cancelled', 'no_show'], true) && trim($reason) === '', 422, 'A reason is required.');
 
         $data = ['status' => $status, 'updated_at' => now()];
         $paymentId = null;
@@ -626,17 +616,35 @@ class ModulePage extends Component
 
         DB::transaction(function () use ($bookingId, $status, $reason, &$data, &$paymentId, &$paymentCreated): void {
             $booking = Booking::query()->lockForUpdate()->findOrFail($bookingId);
+            $previousTechnicianId = $booking->assigned_technician_id;
+
+            abort_if(
+                in_array($status, ['en_route', 'in_progress', 'completed'], true)
+                && $booking->assigned_technician_id === null,
+                422,
+                'A technician must be assigned before this booking can start or complete.',
+            );
+
+            abort_if(
+                $status === 'no_show'
+                && ($booking->scheduled_at === null || $booking->scheduled_at->isFuture()),
+                422,
+                'Only overdue scheduled bookings can be marked as no show.',
+            );
 
             if ($this->columnExists('bookings', 'cancellation_reason')) {
-                $data['cancellation_reason'] = $status === 'cancelled' ? $reason : null;
+                $data['cancellation_reason'] = in_array($status, ['cancelled', 'no_show'], true) ? trim($reason) : null;
             }
             if ($this->columnExists('bookings', 'assigned_technician_id') && in_array($status, ['pending', 'matching'], true)) {
                 $data['assigned_technician_id'] = null;
             }
 
-            $booking->update($data);
-            if ($booking->assigned_technician_id && in_array($status, ['pending', 'matching', 'completed', 'cancelled'], true)) {
-                $this->releaseTechnicianIfIdle((int) $booking->assigned_technician_id);
+            $bookingData = $data;
+            unset($bookingData['status']);
+            $booking->update($bookingData);
+            $booking->transitionTo($status, auth()->user(), trim($reason) !== '' ? trim($reason) : null, ['source' => 'superadmin']);
+            if ($previousTechnicianId && in_array($status, ['pending', 'matching', 'completed', 'cancelled', 'no_show'], true)) {
+                $this->releaseTechnicianIfIdle((int) $previousTechnicianId);
             }
 
             if ($status === 'completed' && $this->tableExists('payments')) {
@@ -658,43 +666,58 @@ class ModulePage extends Component
         $this->authorizeSuperAdmin();
         abort_unless($this->tableExists('bookings'), 422, 'Service bookings are not available yet.');
         abort_unless($this->columnExists('bookings', 'assigned_technician_id'), 422, 'Booking assignment is not available yet.');
-        $booking = Booking::query()->findOrFail($bookingId);
 
-        if ($technicianId !== null) {
-            $technician = User::query()
-                ->where('id', $technicianId)
-                ->where('role', 'technician')
-                ->when($this->columnExists('users', 'account_status'), fn ($query) => $query->where('account_status', 'active'))
-                ->first();
-            abort_unless($technician, 422, 'Technician is unavailable.');
-            abort_unless(
-                $this->tableExists('technician_verifications')
-                && TechnicianVerification::query()->where('user_id', $technicianId)->where('status', 'approved')->exists(),
-                422,
-                'Technician is not verified.',
-            );
-            $maxActiveJobs = max(1, (int) ($this->tableExists('platform_settings') ? PlatformSetting::query()->where('key', 'max_active_jobs')->value('value') : 1));
-            abort_if(
-                Booking::query()
-                    ->where('assigned_technician_id', $technicianId)
-                    ->where('id', '!=', $bookingId)
-                    ->whereIn('status', ['assigned', 'en_route', 'in_progress'])
-                    ->count() >= $maxActiveJobs,
-                422,
-                'Technician has reached the active assignment limit.',
-            );
-        }
+        DB::transaction(function () use ($bookingId, $technicianId): void {
+            $booking = Booking::query()->lockForUpdate()->findOrFail($bookingId);
+            $previousTechnicianId = $booking->assigned_technician_id;
+            $technician = null;
 
-        $booking->update([
-            'assigned_technician_id' => $technicianId,
-            'status' => $technicianId ? 'assigned' : 'matching',
-        ]);
-        if ($booking->assigned_technician_id && (int) $booking->assigned_technician_id !== $technicianId) {
-            $this->releaseTechnicianIfIdle((int) $booking->assigned_technician_id);
-        }
-        if ($technicianId !== null && $this->columnExists('users', 'availability_status')) {
-            $technician->update(['availability_status' => 'busy']);
-        }
+            if ($technicianId !== null) {
+                $technician = User::query()
+                    ->lockForUpdate()
+                    ->where('id', $technicianId)
+                    ->where('role', 'technician')
+                    ->when($this->columnExists('users', 'account_status'), fn ($query) => $query->where('account_status', 'active'))
+                    ->first();
+                abort_unless($technician !== null, 422, 'Technician is unavailable.');
+                $verification = $this->tableExists('technician_verifications')
+                    ? TechnicianVerification::query()->where('user_id', $technicianId)->where('status', 'approved')->first()
+                    : null;
+                abort_unless($verification !== null, 422, 'Technician is not verified.');
+                abort_unless(
+                    $verification->supportsService((string) $booking->service_type),
+                    422,
+                    'Technician does not have the approved capability for this service.',
+                );
+                $maxActiveJobs = max(1, (int) ($this->tableExists('platform_settings') ? PlatformSetting::query()->where('key', 'max_active_jobs')->value('value') : 1));
+                abort_if(
+                    Booking::query()
+                        ->where('assigned_technician_id', $technicianId)
+                        ->where('id', '!=', $bookingId)
+                        ->whereIn('status', Booking::ACTIVE_STATUSES)
+                        ->count() >= $maxActiveJobs,
+                    422,
+                    'Technician has reached the active assignment limit.',
+                );
+            }
+
+            $booking->update([
+                'assigned_technician_id' => $technicianId,
+            ]);
+            $booking->transitionTo(
+                $technicianId !== null ? 'assigned' : 'matching',
+                auth()->user(),
+                $technicianId !== null ? 'Assigned by super admin.' : 'Returned to matching queue.',
+                ['source' => 'superadmin', 'assigned_technician_id' => $technicianId],
+            );
+            if ($previousTechnicianId && (int) $previousTechnicianId !== $technicianId) {
+                $this->releaseTechnicianIfIdle((int) $previousTechnicianId);
+            }
+            if ($technicianId !== null && $this->columnExists('users', 'availability_status')) {
+                $technician->update(['availability_status' => 'busy']);
+            }
+        });
+
         $this->recordAudit('booking.updated', 'booking', $bookingId, ['assigned_technician_id' => $technicianId]);
         $this->flashStatus($technicianId ? 'Technician assigned to booking.' : 'Booking returned to matching queue.');
     }
@@ -741,17 +764,23 @@ class ModulePage extends Component
         $this->authorizeSuperAdmin();
         $this->validateValue($status, ['available', 'busy', 'offline']);
         abort_unless($this->columnExists('users', 'availability_status'), 422, 'Technician availability is not available yet.');
-        $technician = User::query()->where('id', $technicianId)->where('role', 'technician')->first();
-        abort_unless($technician, 404);
-        abort_if(
-            $status === 'available'
-            && $this->tableExists('bookings')
-            && Booking::query()->where('assigned_technician_id', $technicianId)->whereIn('status', ['assigned', 'en_route', 'in_progress'])->exists(),
-            422,
-            'Technician has an active assignment.',
-        );
+        DB::transaction(function () use ($technicianId, $status): void {
+            $technician = User::query()
+                ->lockForUpdate()
+                ->where('id', $technicianId)
+                ->where('role', 'technician')
+                ->first();
+            abort_unless($technician !== null, 404);
+            abort_if(
+                $status === 'available'
+                && $this->tableExists('bookings')
+                && Booking::query()->where('assigned_technician_id', $technicianId)->whereIn('status', ['assigned', 'en_route', 'in_progress'])->exists(),
+                422,
+                'Technician has an active assignment.',
+            );
 
-        $technician->update(['availability_status' => $status]);
+            $technician->update(['availability_status' => $status]);
+        });
         $this->recordAudit('technician.availability_updated', 'user', $technicianId, ['availability_status' => $status]);
         $this->flashStatus('Technician availability updated.');
     }
@@ -768,9 +797,8 @@ class ModulePage extends Component
             ->exists();
 
         if (! $hasActiveAssignment) {
-            User::query()->whereKey($technicianId)->update([
-                'availability_status' => 'available',
-            ]);
+            $technician = User::query()->lockForUpdate()->find($technicianId);
+            $technician?->update(['availability_status' => 'available']);
         }
     }
 
@@ -779,24 +807,45 @@ class ModulePage extends Component
         $this->authorizeSuperAdmin();
         $this->validateValue($status, ['waiting', 'called', 'serving', 'on_hold', 'completed', 'no_show', 'cancelled']);
         abort_unless($this->tableExists('walk_in_entries'), 422, 'Walk-in queue is not available yet.');
-        $entry = WalkInEntry::query()->findOrFail($entryId);
+        $data = DB::transaction(function () use ($entryId, $status): array {
+            $entry = WalkInEntry::query()->lockForUpdate()->findOrFail($entryId);
+            $counter = $entry->counter_id && $this->tableExists('service_counters')
+                ? ServiceCounter::query()->lockForUpdate()->find($entry->counter_id)
+                : null;
+            $allowedTransitions = [
+                'waiting' => ['called', 'serving', 'on_hold', 'no_show', 'cancelled'],
+                'called' => ['serving', 'on_hold', 'no_show', 'cancelled'],
+                'serving' => ['on_hold', 'completed'],
+                'on_hold' => ['serving', 'cancelled'],
+                'completed' => [],
+                'no_show' => [],
+                'cancelled' => [],
+            ];
 
-        $data = ['status' => $status, 'updated_at' => now()];
-        if ($status === 'called') {
-            $data['called_at'] = now();
-        }
-        if ($status === 'serving') {
-            $data['service_started_at'] = now();
-        }
-        if ($status === 'completed') {
-            $data['completed_at'] = now();
-        }
-        $entry->update($data);
-        if ($entry->counter_id && $this->tableExists('service_counters')) {
-            ServiceCounter::query()->whereKey($entry->counter_id)->update([
+            abort_unless(
+                $entry->status === $status
+                || in_array($status, $allowedTransitions[(string) $entry->status] ?? [], true),
+                422,
+                'Walk-in entry cannot be moved from its current status.',
+            );
+
+            $data = ['status' => $status, 'updated_at' => now()];
+            if ($status === 'called') {
+                $data['called_at'] = now();
+            }
+            if ($status === 'serving') {
+                $data['service_started_at'] = now();
+            }
+            if ($status === 'completed') {
+                $data['completed_at'] = now();
+            }
+            $entry->update($data);
+            $counter?->update([
                 'status' => in_array($status, ['called', 'serving'], true) ? 'busy' : 'available',
             ]);
-        }
+
+            return $data;
+        });
         $this->recordAudit('walk_in.updated', 'walk_in_entry', $entryId, $data);
         $this->flashStatus('Walk-in queue status updated.');
     }
@@ -817,13 +866,24 @@ class ModulePage extends Component
         $this->authorizeSuperAdmin();
         $this->validateValue($status, ['pending', 'paid', 'failed', 'refunded']);
         abort_unless($this->tableExists('payments'), 422, 'Payments are not available yet.');
-        $payment = Payment::query()->with('booking:id,status')->findOrFail($paymentId);
-        abort_if($status === 'paid' && $payment->booking?->status !== 'completed', 422, 'Payments can only be marked paid after booking completion.');
-        $data = ['status' => $status];
-        if ($status === 'paid') {
-            $data['paid_at'] = now();
-        }
-        $payment->update($data);
+        $data = DB::transaction(function () use ($paymentId, $status): array {
+            $payment = Payment::query()->findOrFail($paymentId);
+            $booking = $payment->booking()->lockForUpdate()->firstOrFail();
+            $payment = Payment::query()->lockForUpdate()->findOrFail($payment->id);
+
+            abort_if($status === 'paid' && $booking->status !== 'completed', 422, 'Payments can only be marked paid after booking completion.');
+            abort_if($status === 'refunded' && $payment->status !== 'paid', 422, 'Only paid payments can be refunded.');
+
+            $data = [
+                'status' => $status,
+                'paid_at' => $status === 'paid'
+                    ? now()
+                    : (in_array($status, ['pending', 'failed'], true) ? null : $payment->paid_at),
+            ];
+            $payment->update($data);
+
+            return $data;
+        });
         $this->recordAudit($status === 'paid' ? 'payment.paid' : 'payments.updated', 'payment', $paymentId, $data);
         $this->flashStatus('Payment status updated.');
     }
@@ -877,7 +937,7 @@ class ModulePage extends Component
     public function saveSupportTicket(): void
     {
         $this->authorizeSuperAdmin();
-        abort_unless($this->editingSupportTicketId, 422, 'A support ticket must be selected.');
+        abort_unless($this->editingSupportTicketId !== null, 422, 'A support ticket must be selected.');
 
         $validated = Validator::make([
             'status' => $this->supportStatus,
@@ -1007,6 +1067,7 @@ class ModulePage extends Component
             'clear-cache' => Cache::flush(),
             'retry-failed-jobs' => Artisan::call('queue:retry', ['id' => ['all']]),
             'run-scheduler' => Artisan::call('schedule:run'),
+            default => abort(422, 'Unknown system action.'),
         };
         $this->recordAudit("system.{$action}", 'system');
         $this->flashStatus('System action completed.');
@@ -1050,7 +1111,8 @@ class ModulePage extends Component
 
     private function authorizeSuperAdmin(): void
     {
-        abort_unless(auth()->user()?->isAdmin(), 403);
+        $user = auth()->user();
+        abort_unless($user instanceof User && $user->isAdmin(), 403);
     }
 
     /** @param array<int, string> $allowed */
@@ -1082,9 +1144,7 @@ class ModulePage extends Component
         Flux::toast(variant: 'success', text: $message);
     }
 
-    /**
-     * @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>}
-     */
+    /** @return array<string, mixed> */
     private function contentFor(string $module): array
     {
         return match ($module) {
@@ -1101,6 +1161,7 @@ class ModulePage extends Component
             'audit-logs' => $this->auditContent(),
             'service-catalog' => $this->catalogContent(),
             'platform-settings' => $this->settingsContent(),
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -1108,6 +1169,9 @@ class ModulePage extends Component
     {
         $this->authorizeSuperAdmin();
         abort_unless($this->tableExists('platform_settings'), 422, 'Platform settings are not available yet.');
+        $adminAlertEmail = auth()->user() instanceof User
+            ? (string) auth()->user()->email
+            : 'superadmin@fixtrack.test';
 
         $defaults = collect([
             ['operations', 'booking_auto_match', 'Automatic technician matching', 'true', 'boolean'],
@@ -1117,7 +1181,7 @@ class ModulePage extends Component
             ['booking', 'quick_booking_enabled', 'Quick booking', 'true', 'boolean'],
             ['booking', 'walk_in_queue_enabled', 'Walk-in queue', 'true', 'boolean'],
             ['booking', 'cancellation_window_hours', 'Cancellation window (hours)', '2', 'number'],
-            ['notifications', 'admin_alert_email', 'Admin alert email', 'superadmin@fixtrack.test', 'text'],
+            ['notifications', 'admin_alert_email', 'Admin alert email', $adminAlertEmail, 'text'],
             ['notifications', 'email_notifications', 'Email notifications', 'true', 'boolean'],
             ['notifications', 'sms_notifications', 'SMS notifications', 'false', 'boolean'],
             ['security', 'session_timeout_minutes', 'Session timeout (minutes)', '120', 'number'],
@@ -1166,7 +1230,7 @@ class ModulePage extends Component
     public function saveSetting(): void
     {
         $this->authorizeSuperAdmin();
-        abort_unless($this->editingSettingId, 422, 'A setting must be selected.');
+        abort_unless($this->editingSettingId !== null, 422, 'A setting must be selected.');
 
         $setting = PlatformSetting::query()->findOrFail($this->editingSettingId);
 
@@ -1252,7 +1316,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function systemHealthContent(): array
     {
         $pendingJobs = $this->tableExists('jobs') ? DB::table('jobs')->count() : 0;
@@ -1303,7 +1367,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function usersContent(): array
     {
         $total = $this->tableExists('users') ? User::query()->count() : 0;
@@ -1363,7 +1427,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function verificationContent(): array
     {
         $pending = 0;
@@ -1387,7 +1451,7 @@ class ModulePage extends Component
                     $rowIds[] = (int) $verification->id;
 
                     return [
-                        (string) ($verification->technician?->name ?? '—'),
+                        (string) data_get($verification->technician, 'name', '—'),
                         $this->listValue($verification->service_categories),
                         "{$verification->years_experience} years",
                         $this->formatDate($verification->submitted_at),
@@ -1423,7 +1487,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function bookingsContent(): array
     {
         $total = $this->tableExists('bookings') ? Booking::query()->count() : 0;
@@ -1448,10 +1512,10 @@ class ModulePage extends Component
 
                 return [
                     (string) $booking->reference.($booking->is_priority ?? false ? ' · Priority' : ''),
-                    (string) ($booking->customer?->name ?? '—'),
+                    (string) data_get($booking->customer, 'name', '—'),
                     $this->serviceLabel($booking->service_type),
                     $booking->scheduled_at ? $this->formatDate($booking->scheduled_at) : 'ASAP',
-                    (string) ($booking->technician?->name ?? 'Unassigned'),
+                    (string) data_get($booking->technician, 'name', 'Unassigned'),
                     Str::headline((string) $booking->status),
                 ];
             })->all();
@@ -1484,7 +1548,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function dispatchContent(): array
     {
         $hasAssignments = $this->columnExists('bookings', 'assigned_technician_id');
@@ -1508,10 +1572,10 @@ class ModulePage extends Component
 
                 return [
                     (string) $booking->reference,
-                    (string) ($booking->customer?->name ?? '—'),
+                    (string) data_get($booking->customer, 'name', '—'),
                     $this->serviceLabel($booking->service_type),
                     Str::limit((string) $booking->address, 36),
-                    (string) ($booking->technician?->name ?? 'Unassigned'),
+                    (string) data_get($booking->technician, 'name', 'Unassigned'),
                     Str::headline((string) $booking->status),
                 ];
             })->all();
@@ -1602,7 +1666,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function walkInContent(): array
     {
         $rows = [];
@@ -1636,12 +1700,12 @@ class ModulePage extends Component
 
                     return [
                         (string) $entry->queue_number,
-                        (string) ($entry->customer?->name ?? $entry->customer_name),
+                        (string) data_get($entry->customer, 'name', $entry->customer_name),
                         $this->serviceLabel($entry->service_type),
                         Str::headline((string) $entry->priority),
                         $this->formatTime($entry->checked_in_at),
                         "{$this->waitMinutes($entry->checked_in_at)} min",
-                        (string) ($entry->counter?->name ?? 'Unassigned'),
+                        (string) data_get($entry->counter, 'name', 'Unassigned'),
                         Str::headline((string) $entry->status),
                     ];
                 })->all();
@@ -1696,7 +1760,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function paymentsContent(): array
     {
         $rows = [];
@@ -1735,8 +1799,8 @@ class ModulePage extends Component
                 $rowIds[] = (int) $payment->id;
 
                 return [
-                    (string) ($payment->booking?->reference ?? '—'),
-                    (string) ($payment->booking?->customer?->name ?? $payment->booking?->customer_name ?? '—'),
+                    (string) data_get($payment->booking, 'reference', '—'),
+                    (string) (data_get($payment->booking, 'customer.name') ?? data_get($payment->booking, 'customer_name') ?? '—'),
                     'PHP '.Number::format((float) $payment->amount, 2),
                     (string) ($payment->method ?: '—'),
                     Str::headline((string) $payment->status),
@@ -1771,7 +1835,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function ratingsContent(): array
     {
         $rows = [];
@@ -1795,8 +1859,8 @@ class ModulePage extends Component
                     $rowIds[] = (int) $review->id;
 
                     return [
-                        (string) ($review->customer?->name ?? '—'),
-                        (string) ($review->technician?->name ?? '—'),
+                        (string) data_get($review->customer, 'name', '—'),
+                        (string) data_get($review->technician, 'name', '—'),
                         "{$review->rating} / 5",
                         Str::limit((string) ($review->comment ?: '—'), 48),
                         Str::headline((string) $review->status),
@@ -1832,16 +1896,7 @@ class ModulePage extends Component
     }
 
     /**
-     * @return array{
-     *     stats: array<int, array{label: string, value: string, icon: string}>,
-     *     chart: array{
-     *         days: array<int, array{label: string, active: int, completed: int, cancelled: int, x: int, activeY: int, completedY: int, cancelledY: int}>,
-     *         maxValue: int,
-     *         points: array{active: string, completed: string, cancelled: string},
-     *         areas: array{active: string, completed: string, cancelled: string},
-     *     },
-     *     sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>,
-     * }
+     * @return array<string, mixed>
      */
     private function analyticsContent(): array
     {
@@ -1998,7 +2053,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function supportContent(): array
     {
         $rows = [];
@@ -2023,7 +2078,7 @@ class ModulePage extends Component
 
                     return [
                         (string) $ticket->reference,
-                        (string) ($ticket->requester?->name ?? '—'),
+                        (string) data_get($ticket->requester, 'name', '—'),
                         Str::limit((string) $ticket->subject, 42),
                         Str::headline((string) $ticket->category),
                         Str::headline((string) $ticket->priority),
@@ -2060,7 +2115,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function auditContent(): array
     {
         $total = 0;
@@ -2080,7 +2135,7 @@ class ModulePage extends Component
                 ->limit(20)
                 ->get()
                 ->map(fn (AuditLog $log): array => [
-                    (string) ($log->actor?->name ?? '—'),
+                    (string) data_get($log->actor, 'name', '—'),
                     Str::headline(str_replace('.', ' ', (string) $log->action)),
                     Str::headline((string) $log->target_type).' #'.($log->target_id ?? '—'),
                     (string) ($log->ip_address ?? '—'),
@@ -2111,7 +2166,7 @@ class ModulePage extends Component
         ];
     }
 
-    /** @return array{stats: array<int, array{label: string, value: string, icon: string}>, sections: array<int, array{title: string, subtitle: string, columns: array<int, array{key: string, label: string, type: string}>, rows: array<int, array<int, string>>, empty: string}>} */
+    /** @return array<string, mixed> */
     private function catalogContent(): array
     {
         $total = 0;
@@ -2212,7 +2267,7 @@ class ModulePage extends Component
             return Str::headline($code);
         }
 
-        $labels = once(fn (): array => ServiceCatalog::query()->pluck('name', 'code')->all());
+        $labels = once(fn (): array => ServiceCatalog::activeCatalog()->pluck('name', 'code')->all());
 
         return (string) ($labels[$code] ?? Str::headline($code));
     }

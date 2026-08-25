@@ -1,0 +1,1356 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R] /Count 5 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 4038 >>
+stream
+q
+1.0 1.0 1.0 rg
+0 0 612 792 re f
+Q
+q
+0.09 0.082 0.165 rg
+0 718 612 74 re f
+Q
+q
+1.0 1.0 1.0 rg
+BT /F2 10 Tf 48 761 Td (FIXTRACK) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 124 761 Td (SCOPE ALIGNMENT AUDIT) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 424 761 Td (SYSARCH 1 REVIEW) Tj ET
+Q
+q
+0.09 0.082 0.165 rg
+BT /F2 17 Tf 48 696 Td (Executive verdict) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.7 w
+48 691 m 564 691 l S
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 686 Td (PURPOSE OF THIS REVIEW) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 669 Td (In this report, "drone" means scope creep: a feature that was added to FixTrack but is not part) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 655 Td (of the SysArch 1 proposal. This is a scope-alignment check, not a code review.) Tj ET
+Q
+q
+0.933 0.973 0.953 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 554 516 87 re B
+Q
+q
+0.082 0.604 0.42 rg
+48 554 5 87 re f
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 11 Tf 66 622 Td (VERDICT: CORE SCOPE IS STILL THE SAME) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 605 Td (The current application is still an online repair and service-request platform for) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 592 Td (Admin, Technician, and Customer. No unrelated business domain or literal drone/UAV) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 579 Td (feature was found. The current build is broader in some areas and still incomplete in) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 566 Td (others.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 536 Td (PROPOSAL BASELINE CHECKED) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 519 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 519 Td (Customer, Technician, and Admin roles with authentication and role-based access.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 503 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 503 Td (Home service and walk-in service requests, ticket or queue handling, and status tracking.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 487 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 487 Td (Technician application, document review, approval, assignment, scheduling, and repair) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 474 Td (progress.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 458 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 458 Td (Payment processing, customer feedback and ratings, support or disputes, and generated) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 445 Td (reports.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 429 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 429 Td (Live tracking, technician location data, repair proof, messages, and the proposal data) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 416 Td (dictionary.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 400 Td (WHAT NEEDS ATTENTION) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 383 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 383 Td (A few current UI or admin options are outside the proposal: extra staff roles, loyalty) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 370 Td (points, service guarantee, passkeys, 2FA, and infrastructure controls.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 354 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 354 Td (Several proposal features are not yet fully backed by the current database: tracking) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 341 Td (history, repair proof uploads, chat, and quotations.) Tj ET
+Q
+q
+1.0 0.973 0.91 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 282 516 48 re B
+Q
+q
+0.831 0.58 0.098 rg
+48 282 5 48 re f
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 11 Tf 66 311 Td (NO CODE CHANGES IN THIS AUDIT) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 294 Td (This document records findings only. It does not remove or add any feature.) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.6 w
+48 42 m 564 42 l S
+Q
+q
+0.467 0.447 0.541 rg
+BT /F1 7.4 Tf 48 27 Td (Prepared from SysArch 1 proposal and current FixTrack source audit) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 539 27 Td (1) Tj ET
+Q
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 5176 >>
+stream
+q
+1.0 1.0 1.0 rg
+0 0 612 792 re f
+Q
+q
+0.09 0.082 0.165 rg
+0 718 612 74 re f
+Q
+q
+1.0 1.0 1.0 rg
+BT /F2 10 Tf 48 761 Td (FIXTRACK) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 124 761 Td (SCOPE ALIGNMENT AUDIT) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 424 761 Td (SYSARCH 1 REVIEW) Tj ET
+Q
+q
+0.09 0.082 0.165 rg
+BT /F2 17 Tf 48 696 Td (1. Proposal baseline vs current system) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.7 w
+48 691 m 564 691 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 686 Td (The proposal describes the same three-sided service workflow that the current app is) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 672 Td (implementing. The naming and database shape changed, but the main business flow did not change.) Tj ET
+Q
+q
+1.0 1.0 1.0 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 427.0 516 231.0 re B
+Q
+q
+0.941 0.933 1.0 rg
+48 632 516 26 re f
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+194 427.0 m 194 658 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+406 427.0 m 406 658 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+564 427.0 m 564 658 l S
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.1 Tf 55 641 Td (Proposal concept) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.1 Tf 201 641 Td (Current implementation) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.1 Tf 413 641 Td (Assessment) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.65 w
+48 632 m 564 632 l S
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 607 m 564 607 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 616 Td (Service Tickets) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 616 Td (Bookings table and Service Bookings module) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 616 Td (Same business concept; renamed.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 576.0 m 564 576.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 591.0 Td (Technician Applications /) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 580.5 Td (Profiles) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 591.0 Td (Technician verifications, documents, and user) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 580.5 Td (role) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 591.0 Td (Combined into fewer tables.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 545.0 m 564 545.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 560.0 Td (Technician Tracking) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 560.0 Td (Dispatch view plus user and booking coordinates) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 560.0 Td (Only partially implemented; no) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 549.5 Td (tracking history.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 514.0 m 564 514.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 529.0 Td (Payments) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 529.0 Td (Payments linked to completed bookings) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 529.0 Td (Same concept; adds failed/refunded) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 518.5 Td (states.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 483.0 m 564 483.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 498.0 Td (Feedback) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 498.0 Td (Reviews linked to booking, customer, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 487.5 Td (technician) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 498.0 Td (Same concept; adds moderation) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 487.5 Td (states.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 452.0 m 564 452.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 467.0 Td (Support / Disputes) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 467.0 Td (Support tickets for customer, technician, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 456.5 Td (Admin) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 467.0 Td (Same concept; connected to) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 456.5 Td (operations.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 55 436.0 Td (System Settings and Logs) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 201 436.0 Td (Platform Settings and Audit Logs modules) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.1 Tf 413 436.0 Td (Aligned extension of the proposal.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 411.0 Td (CURRENT ROLE BOUNDARY) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 394.0 Td (The current route structure still separates Admin, Technician, and Customer workspaces. The) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 380.0 Td (extra Dispatcher, Support, and Finance values appear as role choices in Admin actions, but they) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 366.0 Td (do not have separate role workspaces in the current route structure.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 347.0 Td (PROPOSAL REFERENCES) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 330.0 Td (Proposal pages reviewed: printed pages 2-12 for scope, workflow, FDD, and DFD; printed pages) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 316.0 Td (13-28 for prototypes; printed pages 36-42 for definitions and the data dictionary.) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.6 w
+48 42 m 564 42 l S
+Q
+q
+0.467 0.447 0.541 rg
+BT /F1 7.4 Tf 48 27 Td (Prepared from SysArch 1 proposal and current FixTrack source audit) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 539 27 Td (2) Tj ET
+Q
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 7378 >>
+stream
+q
+1.0 1.0 1.0 rg
+0 0 612 792 re f
+Q
+q
+0.09 0.082 0.165 rg
+0 718 612 74 re f
+Q
+q
+1.0 1.0 1.0 rg
+BT /F2 10 Tf 48 761 Td (FIXTRACK) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 124 761 Td (SCOPE ALIGNMENT AUDIT) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 424 761 Td (SYSARCH 1 REVIEW) Tj ET
+Q
+q
+0.09 0.082 0.165 rg
+BT /F2 17 Tf 48 696 Td (2. Scope additions: the actual "drone" check) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.7 w
+48 691 m 564 691 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 686 Td (These are the current features that are either not stated in the proposal or are more advanced) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 672 Td (than the proposal describes. They do not change the main product purpose, but they should be) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 658 Td (labeled as extensions or removed if strict proposal alignment is required.) Tj ET
+Q
+q
+1.0 1.0 1.0 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 361.29999999999995 516 282.70000000000005 re B
+Q
+q
+0.941 0.933 1.0 rg
+48 618 516 26 re f
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+159 361.29999999999995 m 159 644 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+325 361.29999999999995 m 325 644 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+372 361.29999999999995 m 372 644 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+564 361.29999999999995 m 564 644 l S
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 7.5 Tf 55 627 Td (Current feature) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 7.5 Tf 166 627 Td (Why it is outside or broader) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 7.5 Tf 332 627 Td (Risk) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 7.5 Tf 379 627 Td (Recommendation) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.65 w
+48 618 m 564 618 l S
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 589.4 m 564 589.4 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 602.0 Td (Dispatcher, Support,) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 592.7 Td (Finance roles) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 602.0 Td (Proposal defines Admin, Technician, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 592.7 Td (Customer only.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 602.0 Td (High) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 602.0 Td (Keep only if approved; otherwise limit role) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 592.7 Td (choices to three.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 551.5 m 564 551.5 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 573.4 Td (Loyalty points) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 573.4 Td (Customer dashboard shows a static 250) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 564.1 Td (points value; no proposal or backing) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 554.8000000000001 Td (table.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 573.4 Td (High) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 573.4 Td (Remove or replace with a proposal-backed) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 564.1 Td (metric.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 522.9 m 564 522.9 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 535.5 Td (Service guarantee) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 535.5 Td (Customer dashboard shows a static) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 526.2 Td (30-day guarantee; not in proposal.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 535.5 Td (High) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 535.5 Td (Remove unless the business confirms this) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 526.2 Td (policy.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 494.29999999999995 m 564 494.29999999999995 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 506.9 Td (Passkeys and WebAuthn) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 506.9 Td (Additional authentication method; not) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 497.59999999999997 Td (part of the proposal workflow.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 506.9 Td (Low) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 506.9 Td (Keep as a security enhancement, separate from) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 497.59999999999997 Td (product scope.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 465.69999999999993 m 564 465.69999999999993 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 478.29999999999995 Td (Two-factor authentication) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 478.29999999999995 Td (Additional security feature; not stated) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 468.99999999999994 Td (in the proposal.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 478.29999999999995 Td (Low) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 478.29999999999995 Td (Keep as infrastructure/security scope.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 427.79999999999995 m 564 427.79999999999995 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 449.69999999999993 Td (System Health) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 449.69999999999993 Td (Application, queue, disk, and runtime) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 440.3999999999999 Td (monitoring are technical operations) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 431.0999999999999 Td (features.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 449.69999999999993 Td (Low) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 449.69999999999993 Td (Keep as an Admin-only technical module.) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 389.9 m 564 389.9 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 411.79999999999995 Td (Platform controls) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 411.79999999999995 Td (Adds auto-match, radius, job limits,) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 402.49999999999994 Td (SMS/email, refunds, and moderation) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 393.19999999999993 Td (policies.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 411.79999999999995 Td (Medium) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 411.79999999999995 Td (Document as implementation controls, not new) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 402.49999999999994 Td (user roles.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 55 373.9 Td (Analytics and export) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 373.9 Td (More detailed charts and CSV export) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 166 364.59999999999997 Td (than the proposal report description.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 332 373.9 Td (Low) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 7.5 Tf 379 373.9 Td (Keep as a report implementation enhancement.) Tj ET
+Q
+q
+1.0 0.941 0.941 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 276.29999999999995 516 74 re B
+Q
+q
+0.78 0.294 0.384 rg
+48 276.29999999999995 5 74 re f
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 11 Tf 66 331.29999999999995 Td (MOST IMPORTANT DRIFT) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 314.29999999999995 Td (The static Loyalty points and Service guarantee cards are the clearest unapproved) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 301.29999999999995 Td (business features. They should not be presented as real product commitments without) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 288.29999999999995 Td (group or stakeholder approval.) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.6 w
+48 42 m 564 42 l S
+Q
+q
+0.467 0.447 0.541 rg
+BT /F1 7.4 Tf 48 27 Td (Prepared from SysArch 1 proposal and current FixTrack source audit) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 539 27 Td (3) Tj ET
+Q
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 5025 >>
+stream
+q
+1.0 1.0 1.0 rg
+0 0 612 792 re f
+Q
+q
+0.09 0.082 0.165 rg
+0 718 612 74 re f
+Q
+q
+1.0 1.0 1.0 rg
+BT /F2 10 Tf 48 761 Td (FIXTRACK) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 124 761 Td (SCOPE ALIGNMENT AUDIT) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 424 761 Td (SYSARCH 1 REVIEW) Tj ET
+Q
+q
+0.09 0.082 0.165 rg
+BT /F2 17 Tf 48 696 Td (3. Proposal features that are missing or partial) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.7 w
+48 691 m 564 691 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 686 Td (The audit also found places where the current app is simpler than the proposal. These are not) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 672 Td (scope creep; they are implementation gaps that should be tracked separately.) Tj ET
+Q
+q
+1.0 1.0 1.0 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 404.5 516 253.5 re B
+Q
+q
+0.941 0.933 1.0 rg
+48 632 516 26 re f
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+190 404.5 m 190 658 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+476 404.5 m 476 658 l S
+Q
+q
+0.851 0.839 0.902 RG
+0.55 w
+564 404.5 m 564 658 l S
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.2 Tf 55 641 Td (Proposal feature) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.2 Tf 197 641 Td (Current state) Tj ET
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 8.2 Tf 483 641 Td (Status) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.65 w
+48 632 m 564 632 l S
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 601.0 m 564 601.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 616.0 Td (Live technician tracking) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 616.0 Td (Dispatch and Routes reads current coordinates, but there is no) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 605.5 Td (technician tracking history table or route update workflow.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 616.0 Td (Partial) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 570.0 m 564 570.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 585.0 Td (Repair proof upload) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 585.0 Td (The proposal includes proof images and technician notes. No) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 574.5 Td (repair-proofs table or upload flow was found.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 585.0 Td (Missing) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 539.0 m 564 539.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 554.0 Td (Messages / chat) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 554.0 Td (The proposal includes a real-time messages page. No message or) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 543.5 Td (conversation model/table was found.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 554.0 Td (Missing) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 508.0 m 564 508.0 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 523.0 Td (Quotation workflow) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 523.0 Td (Customer Quotations exists as a screen, but the code states that) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 512.5 Td (no quotation records are stored yet.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 523.0 Td (Placeholder) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 466.5 m 564 466.5 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 492.0 Td (Technician profile data) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 492.0 Td (Verification stores categories, experience, area, phone,) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 481.5 Td (address, and documents; it is not split into the proposal) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 471.0 Td (tables.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 492.0 Td (Simplified) Tj ET
+Q
+q
+0.906 0.894 0.937 RG
+0.55 w
+48 435.5 m 564 435.5 l S
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 450.5 Td (Notifications) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 450.5 Td (Current notifications are derived from bookings and support) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 440.0 Td (tickets; there is no dedicated notification history table.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 450.5 Td (Partial) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 55 419.5 Td (Payment gateway) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 419.5 Td (Payment records and Admin status updates exist, but a real) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 197 409.0 Td (external gateway integration was not found.) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 8.2 Tf 483 419.5 Td (Partial) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 388.5 Td (IMPORTANT DISTINCTION) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 371.5 Td (Do not remove these missing features to make the app look aligned. They are already part of the) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 357.5 Td (proposal and should be treated as future implementation work, while the unapproved additions) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 343.5 Td (should be treated as scope decisions.) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.6 w
+48 42 m 564 42 l S
+Q
+q
+0.467 0.447 0.541 rg
+BT /F1 7.4 Tf 48 27 Td (Prepared from SysArch 1 proposal and current FixTrack source audit) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 539 27 Td (4) Tj ET
+Q
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 4600 >>
+stream
+q
+1.0 1.0 1.0 rg
+0 0 612 792 re f
+Q
+q
+0.09 0.082 0.165 rg
+0 718 612 74 re f
+Q
+q
+1.0 1.0 1.0 rg
+BT /F2 10 Tf 48 761 Td (FIXTRACK) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 124 761 Td (SCOPE ALIGNMENT AUDIT) Tj ET
+Q
+q
+0.784 0.765 0.91 rg
+BT /F1 8 Tf 424 761 Td (SYSARCH 1 REVIEW) Tj ET
+Q
+q
+0.09 0.082 0.165 rg
+BT /F2 17 Tf 48 696 Td (4. Recommended group decision) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.7 w
+48 691 m 564 691 l S
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 686 Td (KEEP AS CORE PROPOSAL SCOPE) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 669 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 669 Td (Three roles: Admin, Technician, and Customer.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 653 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 653 Td (Booking/request flow for home service and walk-in service.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 637 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 637 Td (Verification, assignment, scheduling, status updates, payment, rating, support, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 624 Td (reports.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 608 Td (MARK AS IMPLEMENTATION OR TECHNICAL EXTENSIONS) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 591 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 591 Td (System Health, Platform Settings, Audit Logs, Service Catalog, analytics charts, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 578 Td (export.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 562 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 562 Td (Passkeys, two-factor authentication, payment refund states, review moderation, and) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 549 Td (operational limits.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 533 Td (REVIEW OR REMOVE IF STRICT SYSARCH 1 ALIGNMENT IS REQUIRED) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 516 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 516 Td (Loyalty points and the 30-day service guarantee cards.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 500 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 500 Td (Dispatcher, Support, and Finance role options unless the group formally adds them to the) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 487 Td (requirements.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 471 Td (NEXT IMPLEMENTATION PRIORITIES FROM THE PROPOSAL) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 454 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 454 Td (Technician tracking history and actual live location updates.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 438 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 438 Td (Repair proof image upload and technician repair notes.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 422 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 422 Td (Customer-technician messages or chat.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 9.5 Tf 52 406 Td (-) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.5 Tf 65 406 Td (Persistent quotation records and approval flow.) Tj ET
+Q
+q
+0.933 0.973 0.953 rg
+0.851 0.839 0.902 RG
+0.7 w
+48 308 516 87 re B
+Q
+q
+0.082 0.604 0.42 rg
+48 308 5 87 re f
+Q
+q
+0.145 0.137 0.216 rg
+BT /F2 11 Tf 66 376 Td (FINAL ASSESSMENT) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 359 Td (The system is still recognizably the proposed FixTrack system. It has low-to-moderate) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 346 Td (scope expansion, not a changed product direction. The group only needs to decide) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 333 Td (whether the highlighted extensions are approved and whether the missing proposal) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 9.2 Tf 66 320 Td (features remain in the next milestone.) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 48 290 Td (AUDIT EVIDENCE) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 273 Td (Proposal: /media/nine/Storage/Haskell_Leuterio_IT_205.pdf. Current source: routes/web.php;) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 259 Td (app/Livewire/Customer/ModulePage.php; app/Livewire/Technician/ModulePage.php;) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 245 Td (app/Livewire/SuperAdmin/ModulePage.php;) Tj ET
+Q
+q
+0.282 0.267 0.353 rg
+BT /F1 10 Tf 48 231 Td (database/migrations/2026_08_14_094641_create_fixtrack_admin_operations_tables.php.) Tj ET
+Q
+q
+0.851 0.839 0.902 RG
+0.6 w
+48 42 m 564 42 l S
+Q
+q
+0.467 0.447 0.541 rg
+BT /F1 7.4 Tf 48 27 Td (Prepared from SysArch 1 proposal and current FixTrack source audit) Tj ET
+Q
+q
+0.416 0.353 0.804 rg
+BT /F2 8 Tf 539 27 Td (5) Tj ET
+Q
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 13 0 R >>
+endobj
+xref
+0 15
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000148 00000 n 
+0000000218 00000 n 
+0000000293 00000 n 
+0000004383 00000 n 
+0000004519 00000 n 
+0000009747 00000 n 
+0000009883 00000 n 
+0000017313 00000 n 
+0000017450 00000 n 
+0000022528 00000 n 
+0000022666 00000 n 
+0000027319 00000 n 
+trailer
+<< /Size 15 /Root 1 0 R >>
+startxref
+27457
+%%EOF

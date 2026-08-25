@@ -24,7 +24,7 @@ class EnsureUserHasRole
                 'customer' => $user->isCustomer(),
                 default => $user->role === $role,
             },
-        );
+        ) && $user->hasActiveAccount();
 
         abort_unless($allowed, 403);
 

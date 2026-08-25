@@ -13,6 +13,7 @@ class ServiceCounter extends Model
         'status',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(User::class, 'staff_id');

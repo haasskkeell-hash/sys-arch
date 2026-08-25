@@ -1,12 +1,22 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 test('profile page is displayed', function () {
     $this->actingAs($user = User::factory()->create());
 
     $this->get(route('profile.edit'))->assertOk();
+});
+
+test('settings page uses the responsive settings shell', function () {
+    $this->actingAs(User::factory()->create())
+        ->get(route('profile.edit'))
+        ->assertOk()
+        ->assertSee('data-settings-page', false)
+        ->assertSee('settings-page-navigation', false);
 });
 
 test('profile information can be updated', function () {
@@ -26,6 +36,29 @@ test('profile information can be updated', function () {
     expect($user->name)->toEqual('Test User');
     expect($user->email)->toEqual('test@example.com');
     expect($user->email_verified_at)->toBeNull();
+});
+
+test('profile photo can be uploaded and removed', function () {
+    Storage::fake('public');
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $response = Livewire::test('pages::settings.profile')
+        ->set('profilePhoto', UploadedFile::fake()->create('profile.png', 100, 'image/png'))
+        ->call('saveProfilePhoto');
+
+    $response->assertHasNoErrors();
+
+    $path = $user->refresh()->avatar_path;
+
+    expect($path)->toStartWith('avatars/');
+    Storage::disk('public')->assertExists($path);
+
+    $response->call('removeProfilePhoto')->assertHasNoErrors();
+
+    expect($user->refresh()->avatar_path)->toBeNull();
+    Storage::disk('public')->assertMissing($path);
 });
 
 test('email verification status is unchanged when email address is unchanged', function () {

@@ -2,20 +2,25 @@
 
 namespace App\Livewire\Customer;
 
+use App\Concerns\HandlesProfilePhoto;
 use App\Models\AuditLog;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\PlatformSetting;
+use App\Models\Quotation;
 use App\Models\Review;
 use App\Models\ServiceCatalog;
 use App\Models\SupportTicket;
+use App\Models\User;
 use App\Models\WalkInEntry;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
@@ -27,24 +32,43 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Throwable;
 
 #[Layout('layouts.app')]
 #[Title('Customer Dashboard')]
 class ModulePage extends Component
 {
+    use HandlesProfilePhoto;
     use WithPagination;
 
     public string $moduleSlug = 'overview';
+
+    public string $mobileHomeView = 'home';
+
+    public string $mobileNavigateTab = 'recent';
+
+    public string $mobileTechnicianStoreSearch = '';
 
     public string $bookingType = 'quick';
 
     public string $serviceType = '';
 
+    public string $serviceCategory = '';
+
     public string $customerName = '';
 
     public string $customerPhone = '';
 
+    public string $mobileCountryCode = '+63';
+
     public string $address = '';
+
+    public ?float $addressLatitude = null;
+
+    public ?float $addressLongitude = null;
+
+    /** @var array<int, array{label: string, latitude: float, longitude: float}> */
+    public array $addressSuggestions = [];
 
     public string $scheduledAt = '';
 
@@ -63,7 +87,26 @@ class ModulePage extends Component
     #[Locked]
     public ?int $selectedBookingId = null;
 
+    #[Locked]
+    public ?int $selectedPaymentId = null;
+
+    #[Locked]
+    public ?int $selectedTechnicianId = null;
+
+    public string $bookingIdempotencyKey = '';
+
     public bool $showBookingDetails = false;
+
+    public bool $showPaymentDetails = false;
+
+    #[Locked]
+    public ?int $cancellationBookingId = null;
+
+    public string $cancellationIdempotencyKey = '';
+
+    public bool $showCancellation = false;
+
+    public string $cancellationReason = '';
 
     #[Locked]
     public ?int $reviewBookingId = null;
@@ -113,12 +156,6 @@ class ModulePage extends Component
                 'icon' => 'queue-list',
                 'group' => 'Bookings',
             ],
-            'addresses' => [
-                'label' => 'Addresses',
-                'description' => 'Review the service locations used in your bookings.',
-                'icon' => 'map-pin',
-                'group' => 'Account',
-            ],
             'quotations' => [
                 'label' => 'Quotations',
                 'description' => 'Review technician assessments and quotations when available.',
@@ -127,7 +164,7 @@ class ModulePage extends Component
             ],
             'payments' => [
                 'label' => 'Payments',
-                'description' => 'Review payment records connected to your completed services.',
+                'description' => 'Review your payment history and transaction details for completed services.',
                 'icon' => 'credit-card',
                 'group' => 'Service Journey',
             ],
@@ -164,6 +201,8 @@ class ModulePage extends Component
         $this->moduleSlug = $module ?? 'overview';
         abort_unless(array_key_exists($this->moduleSlug, self::modules()), 404);
         $this->customerName = (string) auth()->user()->name;
+        $this->customerPhone = $this->profilePhoneNumber((string) (auth()->user()->phone ?? ''));
+        $this->bookingIdempotencyKey = Str::uuid()->toString();
     }
 
     public function render(): View
@@ -173,7 +212,9 @@ class ModulePage extends Component
             'moduleState' => $this->moduleState(),
             'content' => $this->contentFor($this->moduleSlug),
             'serviceCatalog' => $this->serviceCatalog(),
+            'technicianStores' => $this->moduleSlug === 'overview' ? $this->technicianStores() : collect(),
             'selectedBooking' => $this->selectedBooking(),
+            'selectedPayment' => $this->selectedPayment(),
         ]);
     }
 
@@ -187,36 +228,339 @@ class ModulePage extends Component
         $this->resetPage('bookingsPage');
     }
 
+    public function updatedAddress(): void
+    {
+        $this->resetValidation('address');
+    }
+
     public function startBooking(string $serviceType = ''): void
     {
         $this->authorizeCustomer();
 
         if ($serviceType !== '') {
-            $this->serviceType = $this->validateValue($serviceType, $this->serviceTypes());
+            $service = $this->serviceCatalog()->firstWhere('code', $serviceType);
+            abort_unless($service instanceof ServiceCatalog, 404);
+            $this->serviceCategory = (string) $service->category;
+            $this->serviceType = (string) $service->code;
         }
 
         $this->moduleSlug = 'book-service';
         $this->resetValidation();
     }
 
-    public function createBooking(): void
+    public function openMobileQuickBook(): void
+    {
+        $this->authorizeCustomer();
+        $this->mobileHomeView = 'quick-book';
+        $this->bookingType = 'quick';
+        $this->serviceCategory = '';
+        $this->serviceType = '';
+        $this->selectedTechnicianId = null;
+        $this->mobileTechnicianStoreSearch = '';
+        $this->resetValidation();
+    }
+
+    public function openMobileSchedule(): void
+    {
+        $this->authorizeCustomer();
+        $this->mobileHomeView = 'schedule';
+        $this->bookingType = 'scheduled';
+        $this->serviceCategory = '';
+        $this->serviceType = '';
+        $this->selectedTechnicianId = null;
+        $this->mobileTechnicianStoreSearch = '';
+        $this->resetValidation();
+    }
+
+    public function chooseServiceCategory(string $category): void
+    {
+        $this->authorizeCustomer();
+
+        if ($category === '') {
+            $this->serviceCategory = '';
+            $this->serviceType = '';
+            $this->resetValidation(['serviceCategory', 'serviceType']);
+
+            return;
+        }
+
+        $this->serviceCategory = $this->validateValue($category, $this->serviceCategories());
+        $this->serviceType = '';
+        $this->resetValidation(['serviceCategory', 'serviceType']);
+    }
+
+    public function chooseServiceType(string $serviceType): void
+    {
+        $this->authorizeCustomer();
+        $service = $this->serviceCatalog()->firstWhere('code', $serviceType);
+
+        abort_unless(
+            $service instanceof ServiceCatalog
+            && $this->serviceCategory !== ''
+            && $service->category === $this->serviceCategory,
+            422,
+            'Choose a service from the selected category.',
+        );
+
+        $this->serviceType = (string) $service->code;
+        $this->resetValidation('serviceType');
+    }
+
+    public function selectMobileTechnicianStore(int $technicianId): void
+    {
+        $this->authorizeCustomer();
+        abort_unless($this->technicianStores()->firstWhere('id', $technicianId) !== null, 404);
+
+        $this->selectedTechnicianId = $technicianId;
+        $this->bookingType = 'scheduled';
+        $this->mobileHomeView = 'schedule-form';
+        $this->mobileTechnicianStoreSearch = '';
+        $this->resetValidation();
+    }
+
+    public function openMobileNavigate(): void
+    {
+        $this->authorizeCustomer();
+        $this->mobileHomeView = 'navigate';
+        $this->mobileNavigateTab = 'recent';
+        $this->addressSuggestions = [];
+        $this->resetValidation();
+    }
+
+    public function closeMobileHomeView(): void
+    {
+        $this->authorizeCustomer();
+        $this->mobileHomeView = 'home';
+        $this->mobileNavigateTab = 'recent';
+        $this->selectedTechnicianId = null;
+        $this->mobileTechnicianStoreSearch = '';
+        $this->addressSuggestions = [];
+        $this->resetValidation();
+    }
+
+    public function chooseMobileScheduleService(string $serviceType): void
+    {
+        $this->authorizeCustomer();
+        $service = $this->serviceCatalog()->firstWhere('code', $serviceType);
+        abort_unless($service instanceof ServiceCatalog, 404);
+        $this->serviceCategory = (string) $service->category;
+        $this->serviceType = (string) $service->code;
+        $this->bookingType = 'scheduled';
+        $this->mobileHomeView = 'schedule-form';
+        $this->resetValidation();
+    }
+
+    public function selectMobileRecentDestination(int $bookingId): void
+    {
+        $this->authorizeCustomer();
+        $booking = $this->customerBookingsWithTechnicianQuery()->whereKey($bookingId)->firstOrFail();
+
+        $this->address = (string) $booking->address;
+        $this->addressLatitude = $booking->latitude !== null ? (float) $booking->latitude : null;
+        $this->addressLongitude = $booking->longitude !== null ? (float) $booking->longitude : null;
+        $this->openMobileQuickBook();
+    }
+
+    public function selectMobileAddress(int $index): void
+    {
+        $this->selectAddress($index);
+        $this->openMobileQuickBook();
+    }
+
+    public function setMobileNavigateTab(string $tab): void
+    {
+        $this->authorizeCustomer();
+        $this->mobileNavigateTab = $this->validateValue($tab, ['recent', 'suggested', 'saved']);
+    }
+
+    public function searchAddress(?string $query = null): void
+    {
+        $this->authorizeCustomer();
+
+        $isTyping = $query !== null;
+
+        if ($isTyping) {
+            $this->address = trim($query);
+            $this->resetValidation('address');
+        }
+
+        $query = trim($this->address);
+
+        if (Str::length($query) < 3) {
+            $this->addressSuggestions = [];
+
+            if (! $isTyping) {
+                $this->addError('address', 'Enter at least 3 characters before searching the map.');
+            }
+
+            return;
+        }
+
+        try {
+            $response = Http::acceptJson()
+                ->withUserAgent(config('app.name', 'FixTrack'))
+                ->connectTimeout(2)
+                ->timeout(3)
+                ->retry(2, 200, throw: false)
+                ->get('https://nominatim.openstreetmap.org/search', [
+                    'q' => $query,
+                    'format' => 'jsonv2',
+                    'addressdetails' => 1,
+                    'countrycodes' => 'ph',
+                    'limit' => 5,
+                ]);
+        } catch (Throwable $exception) {
+            report($exception);
+            $this->addressSuggestions = [];
+
+            if (! $isTyping) {
+                $this->errorToast('The map search is temporarily unavailable.');
+            }
+
+            return;
+        }
+
+        if (! $response->successful()) {
+            Log::warning('Address search provider failed.', [
+                'status' => $response->status(),
+                'query_hash' => sha1($query),
+            ]);
+            $this->addressSuggestions = [];
+
+            if (! $isTyping) {
+                $this->errorToast('The map search is temporarily unavailable.');
+            }
+
+            return;
+        }
+
+        $results = $response->json();
+        $results = is_array($results) ? $results : [];
+
+        $this->addressSuggestions = collect($results)
+            ->map(static function (mixed $result): ?array {
+                if (! is_array($result) || ! isset($result['display_name'], $result['lat'], $result['lon'])) {
+                    return null;
+                }
+
+                return [
+                    'label' => (string) $result['display_name'],
+                    'latitude' => (float) $result['lat'],
+                    'longitude' => (float) $result['lon'],
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        if ($this->addressSuggestions === [] && ! $isTyping) {
+            $this->errorToast('No matching locations were found.');
+        }
+    }
+
+    public function updateLocationFromCoordinates(float $latitude, float $longitude): void
     {
         $this->authorizeCustomer();
 
         $validated = Validator::make([
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ], [
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ])->validate();
+
+        $this->addressLatitude = (float) $validated['latitude'];
+        $this->addressLongitude = (float) $validated['longitude'];
+        $this->addressSuggestions = [];
+        $this->resetValidation('address');
+
+        try {
+            $response = Http::acceptJson()
+                ->withUserAgent(config('app.name', 'FixTrack'))
+                ->connectTimeout(2)
+                ->timeout(3)
+                ->retry(2, 200, throw: false)
+                ->get('https://nominatim.openstreetmap.org/reverse', [
+                    'lat' => $this->addressLatitude,
+                    'lon' => $this->addressLongitude,
+                    'format' => 'jsonv2',
+                    'addressdetails' => 1,
+                    'zoom' => 18,
+                ]);
+        } catch (Throwable $exception) {
+            report($exception);
+            $this->address = '';
+            $this->addError('address', 'We found the pin, but could not read the address. Please enter it manually.');
+
+            return;
+        }
+
+        if (! $response->successful()) {
+            Log::warning('Address reverse geocoder failed.', [
+                'status' => $response->status(),
+                'location_hash' => sha1($this->addressLatitude.'|'.$this->addressLongitude),
+            ]);
+            $this->address = '';
+            $this->addError('address', 'We found the pin, but could not read the address. Please enter it manually.');
+
+            return;
+        }
+
+        $address = trim((string) $response->json('display_name', ''));
+
+        if ($address === '') {
+            $this->address = '';
+            $this->addError('address', 'We found the pin, but could not read the address. Please enter it manually.');
+
+            return;
+        }
+
+        $this->address = $address;
+        $this->resetValidation('address');
+    }
+
+    public function selectAddress(int $index): void
+    {
+        $this->authorizeCustomer();
+        $suggestion = $this->addressSuggestions[$index] ?? null;
+        abort_unless(is_array($suggestion), 404);
+
+        $this->address = $suggestion['label'];
+        $this->addressLatitude = $suggestion['latitude'];
+        $this->addressLongitude = $suggestion['longitude'];
+        $this->addressSuggestions = [];
+        $this->resetValidation('address');
+    }
+
+    public function createBooking(): void
+    {
+        $this->authorizeCustomer();
+        $isMobileBookingFlow = $this->moduleSlug === 'overview' && in_array($this->mobileHomeView, ['quick-book', 'schedule-form'], true);
+        $this->customerName = (string) auth()->user()->name;
+        $bookingIdempotencyKey = $this->idempotencyKey($this->bookingIdempotencyKey ?: Str::uuid()->toString());
+        $this->bookingIdempotencyKey = $bookingIdempotencyKey;
+
+        $validated = Validator::make([
             'customer_name' => $this->customerName,
-            'customer_phone' => $this->customerPhone,
+            'mobile_country_code' => $this->mobileCountryCode,
+            'customer_phone' => $this->normalizePhoneNumber($this->customerPhone, $this->mobileCountryCode),
             'service_type' => $this->serviceType,
             'booking_type' => $this->bookingType,
             'address' => $this->address,
+            'address_latitude' => $this->addressLatitude,
+            'address_longitude' => $this->addressLongitude,
             'description' => $this->description,
             'scheduled_at' => $this->scheduledAt !== '' ? $this->scheduledAt : null,
         ], [
             'customer_name' => ['required', 'string', 'max:120'],
-            'customer_phone' => ['required', 'string', 'max:30'],
+            'mobile_country_code' => ['required', Rule::in(array_keys($this->countryCallingCodes()))],
+            'customer_phone' => ['required', 'string', 'regex:/^\+[1-9][0-9]{7,14}$/'],
             'service_type' => ['required', Rule::in($this->serviceTypes())],
             'booking_type' => ['required', Rule::in(['quick', 'scheduled'])],
             'address' => ['required', 'string', 'max:500'],
+            'address_latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'address_longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'description' => ['nullable', 'string', 'max:2000'],
             'scheduled_at' => ['nullable', 'required_if:booking_type,scheduled', 'date', 'after:now'],
         ])->validate();
@@ -224,34 +568,87 @@ class ModulePage extends Component
         abort_if($this->setting('maintenance_mode') === 'true', 503, 'Bookings are temporarily unavailable during maintenance.');
         abort_if($validated['booking_type'] === 'quick' && $this->setting('quick_booking_enabled') === 'false', 422, 'Quick booking is currently unavailable.');
 
-        $bookingId = DB::transaction(function () use ($validated): int {
-            $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'assigned_technician_id' => null,
-                'reference' => $this->bookingReference(),
-                'customer_name' => $validated['customer_name'],
-                'customer_phone' => $validated['customer_phone'],
-                'service_type' => $validated['service_type'],
-                'booking_type' => $validated['booking_type'],
-                'address' => $validated['address'],
-                'description' => $validated['description'],
-                'scheduled_at' => $validated['scheduled_at'],
-                'status' => $this->setting('booking_auto_match') === 'false' ? 'pending' : 'matching',
-                'is_priority' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $selectedTechnicianId = $validated['booking_type'] === 'scheduled' ? $this->selectedTechnicianId : null;
 
-            $this->recordAudit('customer.booking_created', 'booking', $booking->id, [
-                'booking_type' => $validated['booking_type'],
-                'service_type' => $validated['service_type'],
-            ]);
+        if ($selectedTechnicianId !== null) {
+            $selectedTechnician = $this->technicianStores()->firstWhere('id', $selectedTechnicianId);
+            abort_unless($selectedTechnician !== null, 404);
+            abort_unless(
+                $selectedTechnician->technicianVerification?->supportsService((string) $validated['service_type']),
+                422,
+                'The selected technician does not offer this exact service.',
+            );
+        }
 
-            return $booking->id;
-        });
+        try {
+            $bookingId = DB::transaction(function () use ($validated, $selectedTechnicianId, $bookingIdempotencyKey): int {
+                $customer = User::query()->lockForUpdate()->findOrFail(auth()->id());
+                $existingBooking = $customer->bookings()->where('idempotency_key', $bookingIdempotencyKey)->first();
 
-        $this->resetBookingForm();
-        $this->moduleSlug = 'my-bookings';
+                if ($existingBooking !== null) {
+                    return $existingBooking->id;
+                }
+
+                abort_if(
+                    $customer->bookings()->whereIn('status', Booking::ACTIVE_STATUSES)->exists(),
+                    409,
+                    'You already have an active booking. Complete or cancel it before creating another request.',
+                );
+
+                $booking = Booking::create([
+                    'user_id' => auth()->id(),
+                    'assigned_technician_id' => $selectedTechnicianId,
+                    'reference' => $this->bookingReference(),
+                    'idempotency_key' => $bookingIdempotencyKey,
+                    'customer_name' => $validated['customer_name'],
+                    'customer_phone' => $validated['customer_phone'],
+                    'service_type' => $validated['service_type'],
+                    'booking_type' => $validated['booking_type'],
+                    'address' => $validated['address'],
+                    'latitude' => $validated['address_latitude'],
+                    'longitude' => $validated['address_longitude'],
+                    'description' => $validated['description'],
+                    'scheduled_at' => $validated['scheduled_at'],
+                    'status' => $selectedTechnicianId !== null
+                        ? 'assigned'
+                        : ($this->setting('booking_auto_match') === 'false' ? 'pending' : 'matching'),
+                    'is_priority' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $booking->recordInitialStatus(auth()->user(), 'Booking created.', [
+                    'booking_type' => $validated['booking_type'],
+                    'service_type' => $validated['service_type'],
+                ]);
+
+                $this->recordAudit('customer.booking_created', 'booking', $booking->id, [
+                    'booking_type' => $validated['booking_type'],
+                    'service_type' => $validated['service_type'],
+                    'assigned_technician_id' => $selectedTechnicianId,
+                ]);
+
+                return $booking->id;
+            });
+        } catch (UniqueConstraintViolationException $exception) {
+            $existingBooking = $this->customerBookingsQuery()
+                ->where('idempotency_key', $bookingIdempotencyKey)
+                ->first();
+
+            if ($existingBooking !== null) {
+                $bookingId = $existingBooking->id;
+            } else {
+                report($exception);
+                abort(409, 'This booking request key has already been used. Please retry the booking.');
+            }
+        }
+
+        $this->resetBookingForm($validated['customer_phone']);
+        if ($isMobileBookingFlow) {
+            $this->moduleSlug = 'overview';
+            $this->mobileHomeView = 'home';
+        } else {
+            $this->moduleSlug = 'my-bookings';
+        }
         $this->successToast('Booking created successfully.');
     }
 
@@ -264,12 +661,29 @@ class ModulePage extends Component
         $this->showBookingDetails = true;
     }
 
+    public function openPayment(int $paymentId): void
+    {
+        $this->authorizeCustomer();
+        abort_unless($this->customerPaymentsQuery()->whereKey($paymentId)->exists(), 404);
+
+        $this->selectedPaymentId = $paymentId;
+        $this->showPaymentDetails = true;
+    }
+
     public function joinWalkInQueue(): void
     {
         $this->authorizeCustomer();
-        abort_unless($this->tableExists('walk_in_entries') && $this->columnExists('walk_in_entries', 'user_id'), 422, 'Walk-in queue is not available yet.');
-        abort_if($this->setting('maintenance_mode') === 'true', 503, 'Walk-in queue is temporarily unavailable during maintenance.');
-        abort_if($this->setting('walk_in_queue_enabled') === 'false', 422, 'Walk-in queue is currently unavailable.');
+        if (! $this->walkInQueueAvailable()) {
+            $this->errorToast('Walk-in queue is currently unavailable.');
+
+            return;
+        }
+
+        if ($this->setting('maintenance_mode') === 'true') {
+            $this->errorToast('Walk-in queue is temporarily unavailable during maintenance.');
+
+            return;
+        }
 
         $validated = Validator::make([
             'service_type' => $this->walkInServiceType,
@@ -281,20 +695,34 @@ class ModulePage extends Component
             'notes' => ['nullable', 'string', 'max:1000'],
         ])->validate();
 
-        $entry = WalkInEntry::create([
-            'user_id' => auth()->id(),
-            'queue_number' => $this->walkInQueueNumber(),
-            'customer_name' => auth()->user()->name,
-            'customer_phone' => $validated['phone'],
-            'service_type' => $validated['service_type'],
-            'priority' => 'standard',
-            'status' => 'waiting',
-            'counter_id' => null,
-            'notes' => $validated['notes'],
-            'checked_in_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $entry = null;
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            try {
+                $entry = WalkInEntry::create([
+                    'user_id' => auth()->id(),
+                    'queue_number' => $this->walkInQueueNumber(),
+                    'customer_name' => auth()->user()->name,
+                    'customer_phone' => $validated['phone'],
+                    'service_type' => $validated['service_type'],
+                    'priority' => 'standard',
+                    'status' => 'waiting',
+                    'counter_id' => null,
+                    'notes' => $validated['notes'],
+                    'checked_in_at' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                break;
+            } catch (UniqueConstraintViolationException $exception) {
+                if ($attempt === 2) {
+                    report($exception);
+                    abort(409, 'The walk-in queue is busy. Please try again.');
+                }
+            }
+        }
+
+        abort_unless($entry instanceof WalkInEntry, 409, 'The walk-in queue is busy. Please try again.');
 
         $this->recordAudit('customer.walk_in_created', 'walk_in_entry', $entry->id, ['service_type' => $validated['service_type']]);
         $this->walkInServiceType = '';
@@ -303,10 +731,103 @@ class ModulePage extends Component
         $this->successToast('You joined the walk-in queue.');
     }
 
+    public function prepareCancellation(int $bookingId): void
+    {
+        $this->authorizeCustomer();
+        $booking = $this->customerBookingsQuery()->whereKey($bookingId)->firstOrFail();
+
+        if (! $this->canCancelBooking($booking)) {
+            $this->errorToast('This booking can no longer be cancelled.');
+
+            return;
+        }
+
+        $this->cancellationBookingId = $booking->id;
+        $this->cancellationIdempotencyKey = Str::uuid()->toString();
+        $this->cancellationReason = '';
+        $this->showCancellation = true;
+        $this->resetValidation();
+    }
+
+    public function cancelBooking(): void
+    {
+        $this->authorizeCustomer();
+        $cancellationIdempotencyKey = $this->idempotencyKey($this->cancellationIdempotencyKey ?: Str::uuid()->toString());
+        $this->cancellationIdempotencyKey = $cancellationIdempotencyKey;
+        $validated = Validator::make([
+            'reason' => $this->cancellationReason,
+        ], [
+            'reason' => ['required', 'string', 'max:500'],
+        ])->validate();
+
+        $booking = DB::transaction(function () use ($validated, $cancellationIdempotencyKey): Booking {
+            $booking = $this->customerBookingsQuery()->lockForUpdate()->findOrFail($this->cancellationBookingId);
+
+            if ($booking->statusHistory()->where('idempotency_key', $cancellationIdempotencyKey)->exists()) {
+                return $booking;
+            }
+
+            abort_unless($this->canCancelBooking($booking), 409, 'This booking can no longer be cancelled.');
+
+            $booking->update([
+                'cancellation_reason' => trim($validated['reason']),
+            ]);
+            $booking->transitionTo('cancelled', auth()->user(), trim($validated['reason']), ['source' => 'customer'], $cancellationIdempotencyKey);
+            $booking->update([
+                'assigned_technician_id' => null,
+            ]);
+
+            return $booking;
+        });
+
+        $this->recordAudit('customer.booking_cancelled', 'booking', $booking->id, [
+            'reason' => $booking->cancellation_reason,
+        ]);
+        $this->closeCancellation();
+        $this->successToast('Booking cancelled successfully.');
+    }
+
+    public function closeCancellation(): void
+    {
+        $this->showCancellation = false;
+        $this->cancellationBookingId = null;
+        $this->cancellationIdempotencyKey = '';
+        $this->cancellationReason = '';
+        $this->resetValidation();
+    }
+
+    public function respondToQuotation(int $quotationId, string $status): void
+    {
+        $this->authorizeCustomer();
+        $validatedStatus = Validator::make(['status' => $status], [
+            'status' => ['required', Rule::in(['approved', 'rejected'])],
+        ])->validate()['status'];
+        abort_unless($this->tableExists('quotations'), 422, 'Quotations are not available yet.');
+
+        $quotation = Quotation::query()
+            ->whereKey($quotationId)
+            ->whereHas('booking', fn (Builder $query): Builder => $query->whereBelongsTo(auth()->user(), 'customer'))
+            ->firstOrFail();
+        abort_unless($quotation->status === 'awaiting_approval', 409, 'This quotation has already been answered.');
+        $quotation->update([
+            'status' => $validatedStatus,
+            'responded_at' => now(),
+        ]);
+
+        $this->recordAudit('customer.quotation_responded', 'quotation', $quotation->id, ['status' => $validatedStatus]);
+        $this->successToast($validatedStatus === 'approved' ? 'Quotation approved.' : 'Quotation declined.');
+    }
+
     public function closeBooking(): void
     {
         $this->selectedBookingId = null;
         $this->showBookingDetails = false;
+    }
+
+    public function closePaymentDetails(): void
+    {
+        $this->selectedPaymentId = null;
+        $this->showPaymentDetails = false;
     }
 
     public function startReview(int $bookingId): void
@@ -340,9 +861,8 @@ class ModulePage extends Component
 
         $booking = $this->customerBookingsQuery()->where('id', $this->reviewBookingId)->first();
         abort_unless($booking && $booking->status === 'completed', 422, 'Only completed bookings can be reviewed.');
-        abort_if(Review::query()->where('booking_id', $booking->id)->exists(), 409, 'This booking already has a review.');
 
-        Review::create([
+        $review = Review::query()->createOrFirst(['booking_id' => $booking->id], [
             'booking_id' => $booking->id,
             'customer_id' => auth()->id(),
             'technician_id' => $booking->assigned_technician_id,
@@ -352,6 +872,15 @@ class ModulePage extends Component
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        if (! $review->wasRecentlyCreated) {
+            $this->reviewBookingId = null;
+            $this->reviewRating = 0;
+            $this->reviewComment = '';
+            $this->errorToast('This booking already has a review.');
+
+            return;
+        }
 
         $this->recordAudit('customer.review_created', 'review', (int) $booking->id);
         $this->reviewBookingId = null;
@@ -377,19 +906,33 @@ class ModulePage extends Component
             'message' => ['required', 'string', 'max:5000'],
         ])->validate();
 
-        $ticket = SupportTicket::create([
-            'reference' => $this->supportReference(),
-            'user_id' => auth()->id(),
-            'subject' => $validated['subject'],
-            'category' => $validated['category'],
-            'priority' => $validated['priority'],
-            'status' => 'open',
-            'assigned_to' => null,
-            'latest_message' => $validated['message'],
-            'last_response_at' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $ticket = null;
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            try {
+                $ticket = SupportTicket::create([
+                    'reference' => $this->supportReference(),
+                    'user_id' => auth()->id(),
+                    'subject' => $validated['subject'],
+                    'category' => $validated['category'],
+                    'priority' => $validated['priority'],
+                    'status' => 'open',
+                    'assigned_to' => null,
+                    'latest_message' => $validated['message'],
+                    'last_response_at' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                break;
+            } catch (UniqueConstraintViolationException $exception) {
+                if ($attempt === 2) {
+                    report($exception);
+                    abort(409, 'Support is busy. Please try again.');
+                }
+            }
+        }
+
+        abort_unless($ticket instanceof SupportTicket, 409, 'Support is busy. Please try again.');
 
         $this->recordAudit('customer.support_ticket_created', 'support_ticket', $ticket->id);
         $this->supportSubject = '';
@@ -405,13 +948,13 @@ class ModulePage extends Component
             'book-service' => ['label' => 'Ready to book', 'color' => 'sky'],
             'my-bookings' => ['label' => 'Service history', 'color' => 'violet'],
             'walk-in-queue' => ['label' => 'Queue status', 'color' => 'amber'],
-            'addresses' => ['label' => 'Saved locations', 'color' => 'zinc'],
             'quotations' => ['label' => 'Assessment stage', 'color' => 'amber'],
             'payments' => ['label' => 'Payment history', 'color' => 'emerald'],
             'ratings-reviews' => ['label' => 'Your feedback', 'color' => 'violet'],
             'notifications' => ['label' => 'Latest updates', 'color' => 'sky'],
             'support' => ['label' => 'Help center', 'color' => 'amber'],
             'settings' => ['label' => 'Account preferences', 'color' => 'zinc'],
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -423,13 +966,13 @@ class ModulePage extends Component
             'book-service' => $this->bookingFormContent(),
             'my-bookings' => $this->bookingsContent(),
             'walk-in-queue' => $this->walkInContent(),
-            'addresses' => $this->addressesContent(),
             'quotations' => $this->quotationsContent(),
             'payments' => $this->paymentsContent(),
             'ratings-reviews' => $this->reviewsContent(),
             'notifications' => $this->notificationsContent(),
             'support' => $this->supportContent(),
             'settings' => $this->settingsContent(),
+            default => abort(404, 'Module not found.'),
         };
     }
 
@@ -454,7 +997,7 @@ class ModulePage extends Component
             ],
             'activeBooking' => $activeBooking,
             'recentBookings' => $bookings,
-            'upcomingBookings' => $this->customerBookingsWithTechnicianQuery()->whereNotNull('bookings.scheduled_at')->where('bookings.scheduled_at', '>=', now())->whereNotIn('bookings.status', ['completed', 'cancelled'])->orderBy('bookings.scheduled_at')->limit(3)->get(),
+            'upcomingBookings' => $this->customerBookingsWithTechnicianQuery()->whereNotNull('bookings.scheduled_at')->where('bookings.scheduled_at', '>=', now())->whereNotIn('bookings.status', ['completed', 'cancelled', 'no_show'])->orderBy('bookings.scheduled_at')->limit(3)->get(),
             'popularServices' => $this->serviceCatalog(),
             'openSupport' => $openSupport,
         ];
@@ -465,6 +1008,8 @@ class ModulePage extends Component
     {
         return [
             'services' => $this->serviceCatalog(),
+            'countryCallingCodes' => $this->countryCallingCodes(),
+            'addressMapUrl' => $this->addressMapUrl(),
             'stats' => [
                 ['label' => 'Quick booking', 'value' => $this->setting('quick_booking_enabled') === 'false' ? 'Off' : 'On', 'icon' => 'bolt'],
                 ['label' => 'Service types', 'value' => Number::format(count($this->serviceTypes())), 'icon' => 'wrench-screwdriver'],
@@ -480,7 +1025,7 @@ class ModulePage extends Component
         $base = clone $query;
 
         if ($this->bookingStatus !== 'all') {
-            $this->validateValue($this->bookingStatus, ['all', 'pending', 'matching', 'assigned', 'en_route', 'in_progress', 'completed', 'cancelled']);
+            $this->validateValue($this->bookingStatus, ['all', ...Booking::STATUSES]);
             $query->where('bookings.status', $this->bookingStatus);
         }
 
@@ -505,31 +1050,9 @@ class ModulePage extends Component
     }
 
     /** @return array<string, mixed> */
-    private function addressesContent(): array
-    {
-        $addresses = $this->customerBookingsQuery()
-            ->select('address')
-            ->selectRaw('COUNT(*) as bookings_count')
-            ->selectRaw('MAX(created_at) as last_used_at')
-            ->whereNotNull('address')
-            ->where('address', '!=', '')
-            ->groupBy('address')
-            ->orderByDesc('last_used_at')
-            ->paginate(10, ['*'], 'addressesPage');
-
-        return [
-            'stats' => [
-                ['label' => 'Service locations', 'value' => Number::format($addresses->total()), 'icon' => 'map-pin'],
-                ['label' => 'Most recent', 'value' => $addresses->first()?->last_used_at ? $this->formatDate($addresses->first()->last_used_at) : '—', 'icon' => 'clock'],
-            ],
-            'addresses' => $addresses,
-        ];
-    }
-
-    /** @return array<string, mixed> */
     private function walkInContent(): array
     {
-        if (! $this->tableExists('walk_in_entries') || ! $this->columnExists('walk_in_entries', 'user_id')) {
+        if (! $this->walkInQueueAvailable()) {
             return [
                 'stats' => [
                     ['label' => 'Waiting', 'value' => '0', 'icon' => 'clock'],
@@ -538,6 +1061,8 @@ class ModulePage extends Component
                 ],
                 'entries' => $this->emptyPagination('walkInPage'),
                 'services' => $this->serviceCatalog(),
+                'available' => false,
+                'message' => 'Walk-in queue is currently unavailable. Please try again later.',
             ];
         }
 
@@ -551,20 +1076,45 @@ class ModulePage extends Component
             ],
             'entries' => $query->latest('checked_in_at')->paginate(10, ['*'], 'walkInPage'),
             'services' => $this->serviceCatalog(),
+            'available' => true,
+            'message' => '',
         ];
     }
 
     /** @return array<string, mixed> */
     private function quotationsContent(): array
     {
+        if (! $this->tableExists('quotations')) {
+            return [
+                'stats' => [
+                    ['label' => 'Awaiting assessment', 'value' => '0', 'icon' => 'clipboard-document-list'],
+                    ['label' => 'Pending approval', 'value' => '0', 'icon' => 'clock'],
+                    ['label' => 'Approved', 'value' => '0', 'icon' => 'check-circle'],
+                ],
+                'quotations' => $this->emptyPagination('quotationsPage'),
+                'available' => false,
+                'message' => 'Quotations appear here after a technician assessment. The quotation workflow is not available yet.',
+            ];
+        }
+
+        $query = Quotation::query()
+            ->with(['booking.service', 'technician:id,name'])
+            ->whereHas('booking', fn (Builder $bookingQuery): Builder => $bookingQuery->whereBelongsTo(auth()->user(), 'customer'));
+        $base = clone $query;
+        $awaitingAssessment = $this->customerBookingsQuery()
+            ->whereIn('status', ['assigned', 'en_route', 'in_progress'])
+            ->whereDoesntHave('quotation')
+            ->count();
+
         return [
             'stats' => [
-                ['label' => 'Awaiting assessment', 'value' => '0', 'icon' => 'clipboard-document-list'],
-                ['label' => 'Pending approval', 'value' => '0', 'icon' => 'clock'],
-                ['label' => 'Approved', 'value' => '0', 'icon' => 'check-circle'],
+                ['label' => 'Awaiting assessment', 'value' => Number::format($awaitingAssessment), 'icon' => 'clipboard-document-list'],
+                ['label' => 'Pending approval', 'value' => Number::format((clone $base)->where('status', 'awaiting_approval')->count()), 'icon' => 'clock'],
+                ['label' => 'Approved', 'value' => Number::format((clone $base)->where('status', 'approved')->count()), 'icon' => 'check-circle'],
             ],
-            'available' => false,
-            'message' => 'Quotations appear here after a technician assessment. No quotation records are stored in this version yet.',
+            'quotations' => $query->latest('created_at')->paginate(10, ['*'], 'quotationsPage'),
+            'available' => true,
+            'message' => 'Quotations appear here after a technician assessment.',
         ];
     }
 
@@ -575,9 +1125,7 @@ class ModulePage extends Component
             return ['stats' => $this->paymentStats(), 'payments' => $this->emptyPagination('paymentsPage')];
         }
 
-        $query = Payment::query()
-            ->with(['booking:id,reference,service_type,status,user_id'])
-            ->whereHas('booking', fn (Builder $bookingQuery): Builder => $bookingQuery->whereBelongsTo(auth()->user(), 'customer'));
+        $query = $this->customerPaymentsQuery();
 
         return [
             'stats' => [
@@ -616,6 +1164,20 @@ class ModulePage extends Component
     private function notificationsContent(): array
     {
         $items = collect();
+
+        if ($this->tableExists('notifications')) {
+            foreach (auth()->user()->notifications()->latest()->limit(10)->get() as $notification) {
+                $data = $notification->data;
+                $items->push([
+                    'title' => $data['title'] ?? 'Booking update',
+                    'detail' => $data['detail'] ?? 'Your service booking was updated.',
+                    'status' => $data['status'] ?? 'info',
+                    'date' => $notification->created_at,
+                    'unread' => $notification->read_at === null,
+                ]);
+            }
+        }
+
         $bookings = $this->customerBookingsWithTechnicianQuery()->latest('bookings.updated_at')->limit(6)->get();
 
         foreach ($bookings as $booking) {
@@ -681,19 +1243,30 @@ class ModulePage extends Component
 
     private function authorizeCustomer(): void
     {
-        abort_unless(auth()->user()?->isCustomer(), 403);
+        $user = auth()->user();
+        abort_unless($user instanceof User && $user->isCustomer() && $user->hasActiveAccount(), 403);
     }
 
+    /** @return Builder<Booking> */
     private function customerBookingsQuery(): Builder
     {
         return Booking::query()->whereBelongsTo(auth()->user(), 'customer');
     }
 
+    /** @return Builder<Payment> */
+    private function customerPaymentsQuery(): Builder
+    {
+        return Payment::query()
+            ->with(['booking:id,reference,service_type,status,user_id'])
+            ->whereHas('booking', fn (Builder $bookingQuery): Builder => $bookingQuery->whereBelongsTo(auth()->user(), 'customer'));
+    }
+
+    /** @return Builder<Booking> */
     private function customerBookingsWithTechnicianQuery(): Builder
     {
         return Booking::query()
-            ->select(['id', 'user_id', 'assigned_technician_id', 'reference', 'service_type', 'booking_type', 'status', 'address', 'description', 'scheduled_at', 'created_at', 'updated_at'])
-            ->with('technician:id,name')
+            ->select(['id', 'user_id', 'assigned_technician_id', 'reference', 'customer_name', 'customer_phone', 'service_type', 'booking_type', 'status', 'address', 'description', 'scheduled_at', 'latitude', 'longitude', 'created_at', 'updated_at'])
+            ->with('technician:id,name,avatar_path,latitude,longitude')
             ->whereBelongsTo(auth()->user(), 'customer');
     }
 
@@ -703,7 +1276,95 @@ class ModulePage extends Component
             return null;
         }
 
-        return $this->customerBookingsQuery()->where('id', $this->selectedBookingId)->first();
+        $query = $this->customerBookingsQuery();
+
+        if ($this->tableExists('quotations')) {
+            $query->with('quotation');
+        }
+
+        return $query->whereKey($this->selectedBookingId)->first();
+    }
+
+    private function selectedPayment(): ?Payment
+    {
+        if ($this->selectedPaymentId === null) {
+            return null;
+        }
+
+        return $this->customerPaymentsQuery()->whereKey($this->selectedPaymentId)->first();
+    }
+
+    /** @return array<string, string> */
+    private function countryCallingCodes(): array
+    {
+        return [
+            '+63' => 'Philippines (+63)',
+            '+1' => 'United States / Canada (+1)',
+            '+44' => 'United Kingdom (+44)',
+            '+61' => 'Australia (+61)',
+            '+65' => 'Singapore (+65)',
+            '+81' => 'Japan (+81)',
+            '+82' => 'South Korea (+82)',
+            '+86' => 'China (+86)',
+            '+966' => 'Saudi Arabia (+966)',
+            '+971' => 'United Arab Emirates (+971)',
+        ];
+    }
+
+    private function normalizePhoneNumber(string $phone, string $countryCode): string
+    {
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
+        $countryDigits = ltrim($countryCode, '+');
+
+        if ($digits === '') {
+            return '';
+        }
+
+        if (str_starts_with($digits, $countryDigits)) {
+            return '+'.$digits;
+        }
+
+        return '+'.$countryDigits.ltrim($digits, '0');
+    }
+
+    private function profilePhoneNumber(string $phone): string
+    {
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
+
+        return str_starts_with($digits, '63') ? Str::after($digits, '63') : ltrim($digits, '0');
+    }
+
+    private function addressMapUrl(): ?string
+    {
+        if ($this->addressLatitude === null || $this->addressLongitude === null) {
+            return null;
+        }
+
+        $latitudeDelta = 0.01;
+        $longitudeDelta = 0.01;
+
+        return 'https://www.openstreetmap.org/export/embed.html?'.http_build_query([
+            'bbox' => implode(',', [
+                $this->addressLongitude - $longitudeDelta,
+                $this->addressLatitude - $latitudeDelta,
+                $this->addressLongitude + $longitudeDelta,
+                $this->addressLatitude + $latitudeDelta,
+            ]),
+            'layer' => 'mapnik',
+            'marker' => $this->addressLatitude.','.$this->addressLongitude,
+        ]);
+    }
+
+    private function walkInQueueAvailable(): bool
+    {
+        return $this->tableExists('walk_in_entries')
+            && $this->columnExists('walk_in_entries', 'user_id')
+            && $this->setting('walk_in_queue_enabled') !== 'false';
+    }
+
+    private function canCancelBooking(Booking $booking): bool
+    {
+        return in_array($booking->status, Booking::ACTIVE_STATUSES, true);
     }
 
     /** @return array<int, string> */
@@ -712,14 +1373,56 @@ class ModulePage extends Component
         return $this->serviceCatalog()->pluck('code')->map(static fn (mixed $code): string => (string) $code)->all();
     }
 
-    /** @return Collection<int, object> */
-    private function serviceCatalog(): Collection
+    /** @return array<int, string> */
+    private function serviceCategories(): array
     {
-        if ($this->tableExists('service_catalog')) {
-            return once(fn (): Collection => ServiceCatalog::query()->where('is_active', true)->orderBy('name')->get(['code', 'name', 'category', 'base_price', 'description']));
+        return $this->serviceCatalog()
+            ->pluck('category')
+            ->filter()
+            ->unique()
+            ->values()
+            ->map(static fn (mixed $category): string => (string) $category)
+            ->all();
+    }
+
+    /** @return Collection<int, User> */
+    private function technicianStores(): Collection
+    {
+        if (! $this->tableExists('technician_verifications')) {
+            return collect();
         }
 
-        return collect();
+        $technicianStores = once(fn (): Collection => User::query()
+            ->select(['id', 'name'])
+            ->where('role', 'technician')
+            ->when($this->columnExists('users', 'account_status'), fn (Builder $query): Builder => $query->where('account_status', 'active'))
+            ->whereHas('technicianVerification', function (Builder $query): void {
+                $query->where('status', 'approved')
+                    ->whereNotNull('address')
+                    ->where('address', '<>', '');
+            })
+            ->with('technicianVerification:id,user_id,address,service_categories,service_area,status')
+            ->orderBy('name')
+            ->get());
+
+        $search = Str::lower(trim($this->mobileTechnicianStoreSearch));
+
+        if ($search === '') {
+            return $technicianStores;
+        }
+
+        return $technicianStores->filter(function (User $technicianStore) use ($search): bool {
+            $address = (string) $technicianStore->technicianVerification?->address;
+            $searchable = Str::lower($technicianStore->name.' '.$address);
+
+            return Str::contains($searchable, $search);
+        })->values();
+    }
+
+    /** @return Collection<int, ServiceCatalog> */
+    private function serviceCatalog(): Collection
+    {
+        return once(fn (): Collection => ServiceCatalog::activeCatalog());
     }
 
     private function bookingReference(): string
@@ -765,17 +1468,11 @@ class ModulePage extends Component
 
     private function serviceLabel(?string $service): string
     {
-        return collect($this->serviceCatalog())->firstWhere('code', $service)?->name ?? Str::headline((string) $service);
-    }
+        $catalogEntry = collect($this->serviceCatalog())->firstWhere('code', $service);
 
-    private function formatDate(mixed $date): string
-    {
-        return $date ? Carbon::parse($date)->format('M d, Y') : '—';
-    }
-
-    private function formatDateTime(mixed $date): string
-    {
-        return $date ? Carbon::parse($date)->format('M d, Y · g:i A') : '—';
+        return $catalogEntry instanceof ServiceCatalog
+            ? (string) $catalogEntry->name
+            : Str::headline((string) $service);
     }
 
     /** @return array<int, array{label: string, value: string, icon: string}> */
@@ -788,6 +1485,7 @@ class ModulePage extends Component
         ];
     }
 
+    /** @return LengthAwarePaginator<int, mixed> */
     private function emptyPagination(string $pageName): LengthAwarePaginator
     {
         return new LengthAwarePaginator([], 0, 10, LengthAwarePaginator::resolveCurrentPage($pageName), [
@@ -796,17 +1494,35 @@ class ModulePage extends Component
         ]);
     }
 
-    private function resetBookingForm(): void
+    private function resetBookingForm(?string $preservedPhone = null): void
     {
         $this->bookingType = 'quick';
+        $this->selectedTechnicianId = null;
+        $this->mobileTechnicianStoreSearch = '';
+        $this->serviceCategory = '';
         $this->serviceType = '';
-        $this->customerPhone = '';
+        $this->customerName = (string) auth()->user()->name;
+        $this->customerPhone = $preservedPhone ?? $this->profilePhoneNumber((string) (auth()->user()->phone ?? ''));
+        $this->mobileCountryCode = '+63';
         $this->address = '';
+        $this->addressLatitude = null;
+        $this->addressLongitude = null;
+        $this->addressSuggestions = [];
         $this->scheduledAt = '';
         $this->description = '';
+        $this->bookingIdempotencyKey = Str::uuid()->toString();
         $this->resetValidation();
     }
 
+    private function idempotencyKey(string $key): string
+    {
+        $key = trim($key);
+        abort_unless(Str::isUuid($key), 422, 'The request could not be verified. Please try again.');
+
+        return $key;
+    }
+
+    /** @param array<int, mixed> $allowed */
     private function validateValue(string $value, array $allowed): string
     {
         abort_unless(in_array($value, $allowed, true), 422, 'The selected option is not available.');
@@ -835,6 +1551,11 @@ class ModulePage extends Component
     private function successToast(string $message): void
     {
         Flux::toast(variant: 'success', text: $message);
+    }
+
+    private function errorToast(string $message): void
+    {
+        Flux::toast(variant: 'danger', text: $message);
     }
 
     private function tableExists(string $table): bool

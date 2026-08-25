@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
     Route::get('realtime/{scope}', [RealtimeController::class, 'snapshot'])
         ->where('scope', '[a-z0-9-]+')
+        ->middleware('throttle:realtime')
         ->name('realtime.snapshot');
     Route::middleware('role:admin')->group(function () {
         Route::get('admin/dashboard', SuperAdminDashboard::class)->name('admin.dashboard');

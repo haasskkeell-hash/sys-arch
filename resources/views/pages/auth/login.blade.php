@@ -8,6 +8,12 @@
             clientError: "",
             successTitle: "Welcome back",
             redirectUrl: "",
+            showLoginSuccess(redirectUrl) {
+                this.redirectUrl = redirectUrl;
+                this.success = true;
+                this.$root.closest(".auth-content")?.classList.add("auth-login-success");
+                window.setTimeout(() => window.location.assign(this.redirectUrl), 1100);
+            },
             async submitLogin(event) {
                 event.preventDefault();
 
@@ -38,9 +44,7 @@
                     }
 
                     if (payload.two_factor === false) {
-                        this.redirectUrl = "{{ route('dashboard') }}";
-                        this.success = true;
-                        window.setTimeout(() => window.location.assign(this.redirectUrl), 1100);
+                        this.showLoginSuccess("{{ route('dashboard') }}");
                         return;
                     }
 
@@ -52,9 +56,7 @@
                     const redirectedAwayFromLogin = response.url && !response.url.endsWith("/login");
 
                     if (response.ok && redirectedAwayFromLogin) {
-                        this.redirectUrl = response.url;
-                        this.success = true;
-                        window.setTimeout(() => window.location.assign(this.redirectUrl), 1100);
+                        this.showLoginSuccess(response.url);
                         return;
                     }
 
